@@ -19,14 +19,12 @@ body{
     animation:bgGerak 15s ease infinite;
 }
 
-/* BACKGROUND GERAK */
 @keyframes bgGerak{
     0%{background-position:0% 50%;}
     50%{background-position:100% 50%;}
     100%{background-position:0% 50%;}
 }
 
-/* CANVAS */
 #bgCanvas{
     position:fixed;
     top:0;
@@ -45,7 +43,6 @@ body{
     background:linear-gradient(90deg,#ff4d4d,#facc15,#22c55e);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
-
     text-shadow:0 0 25px rgba(255,0,0,0.7);
 }
 
@@ -122,7 +119,7 @@ button:hover{
     border-radius:15px;
 }
 
-/* EMOJI BUBBLE */
+/* EMOJI */
 .emoji span{
     position:fixed;
     bottom:-50px;
@@ -143,6 +140,37 @@ button:hover{
     0%{transform:translateY(0) rotate(0); opacity:0;}
     20%{opacity:0.8;}
     100%{transform:translateY(-120vh) rotate(360deg); opacity:0;}
+}
+
+/* NOTES PRO */
+.note-box{
+    margin-top:12px;
+    padding:12px;
+    border-radius:12px;
+    background:rgba(0,0,0,0.6);
+    box-shadow:0 0 15px rgba(255,255,255,0.1);
+    animation:fadeIn 1s ease;
+}
+
+.note-item{
+    font-size:13px;
+    padding:6px;
+    margin:4px 0;
+    border-radius:8px;
+    background:rgba(255,255,255,0.05);
+    text-align:center;
+    color:#facc15;
+    transition:0.3s;
+}
+
+.note-item:hover{
+    background:rgba(255,255,255,0.1);
+    transform:scale(1.03);
+}
+
+@keyframes fadeIn{
+    from{opacity:0; transform:translateY(10px);}
+    to{opacity:1; transform:translateY(0);}
 }
 </style>
 
@@ -185,11 +213,18 @@ button:hover{
 
 <button onclick="kirim()">Kirim Order</button>
 
+<!-- NOTES -->
+
+<div class="note-box">
+    <div class="note-item">⚡ Proses cepat (1–5 menit)</div>
+    <div class="note-item">💎 Robux instan langsung masuk 😊</div>
+    <div class="note-item">🔒 Aman & terpercaya</div>
+    <div class="note-item">📩 Wajib kirim bukti pembayaran</div>
 </div>
 
 </div>
 
-<!-- EMOJI -->
+</div>
 
 <div class="emoji">
 <span>💎</span>
@@ -203,7 +238,6 @@ button:hover{
 <script>
 const WEBHOOK_URL = "https://discord.com/api/webhooks/1501612323117338797/cqKIFk3cH2EJizaOqBk_FCqVKUhGXvS3o34YMKhpASmWRie3IyIgXnRifA-8U8pELCHh";
 
-/* DATA */
 let paket="", harga=0;
 
 function pilih(el,nama,h){
@@ -221,8 +255,7 @@ function lanjut(){
     payBox.style.display="block";
 }
 
-/* DISCORD */
-function kirimDiscord(user, nohp, paket, harga, metode){
+function kirimDiscord(user,nohp,paket,harga,metode){
     fetch(WEBHOOK_URL,{
         method:"POST",
         headers:{"Content-Type":"application/json"},
