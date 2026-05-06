@@ -13,7 +13,27 @@ body{
     margin:0;
     font-family:'Poppins',sans-serif;
     color:white;
-    background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);
+
+    background:linear-gradient(270deg,#0f0c29,#302b63,#24243e,#0f0c29);
+    background-size:600% 600%;
+    animation:bgGerak 15s ease infinite;
+}
+
+/* BACKGROUND GERAK */
+@keyframes bgGerak{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+/* CANVAS */
+#bgCanvas{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:-1;
 }
 
 .header{
@@ -40,6 +60,7 @@ body{
     padding:20px;
     border-radius:15px;
     margin-bottom:20px;
+    backdrop-filter:blur(10px);
 }
 
 input{
@@ -74,6 +95,7 @@ input{
 
 .card.active{
     border:2px solid #22c55e;
+    box-shadow:0 0 20px #22c55e;
 }
 
 button{
@@ -88,6 +110,10 @@ button{
     cursor:pointer;
 }
 
+button:hover{
+    transform:scale(1.05);
+}
+
 .payment{
     display:none;
     margin-top:20px;
@@ -95,11 +121,36 @@ button{
     padding:15px;
     border-radius:15px;
 }
+
+/* EMOJI BUBBLE */
+.emoji span{
+    position:fixed;
+    bottom:-50px;
+    font-size:22px;
+    opacity:0.7;
+    animation:naik 12s linear infinite;
+    filter:drop-shadow(0 0 10px #fff);
+}
+
+.emoji span:nth-child(1){left:10%;}
+.emoji span:nth-child(2){left:25%;}
+.emoji span:nth-child(3){left:45%;}
+.emoji span:nth-child(4){left:65%;}
+.emoji span:nth-child(5){left:80%;}
+.emoji span:nth-child(6){left:90%;}
+
+@keyframes naik{
+    0%{transform:translateY(0) rotate(0); opacity:0;}
+    20%{opacity:0.8;}
+    100%{transform:translateY(-120vh) rotate(360deg); opacity:0;}
+}
 </style>
 
 </head>
 
 <body>
+
+<canvas id="bgCanvas"></canvas>
 
 <div class="header">🚀 TOKO ROBUX 🚀</div>
 
@@ -138,13 +189,21 @@ button{
 
 </div>
 
-<script>
+<!-- EMOJI -->
 
-/* 🔥 GANTI DENGAN WEBHOOK BARU (WAJIB!) */
+<div class="emoji">
+<span>💎</span>
+<span>🔥</span>
+<span>🚀</span>
+<span>✨</span>
+<span>🎮</span>
+<span>💰</span>
+</div>
+
+<script>
 const WEBHOOK_URL = "https://discord.com/api/webhooks/1501612323117338797/cqKIFk3cH2EJizaOqBk_FCqVKUhGXvS3o34YMKhpASmWRie3IyIgXnRifA-8U8pELCHh";
 
-/* ========================= */
-
+/* DATA */
 let paket="", harga=0;
 
 function pilih(el,nama,h){
@@ -162,56 +221,41 @@ function lanjut(){
     payBox.style.display="block";
 }
 
-/* 🔥 DISCORD */
+/* DISCORD */
 function kirimDiscord(user, nohp, paket, harga, metode){
-    const data = {
-        content: "🔥 ORDER MASUK!",
-        embeds: [
-            {
-                title: "💎 TOKO ROBUX",
-                color: 16711680,
-                fields: [
-                    { name: "👤 User ID", value: user },
-                    { name: "📱 No HP", value: nohp },
-                    { name: "📦 Paket", value: paket },
-                    { name: "💰 Harga", value: "Rp" + harga },
-                    { name: "💳 Metode", value: metode }
+    fetch(WEBHOOK_URL,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+            content:"🔥 ORDER MASUK!",
+            embeds:[{
+                title:"💎 TOKO ROBUX",
+                color:16711680,
+                fields:[
+                    {name:"User ID",value:user},
+                    {name:"No HP",value:nohp},
+                    {name:"Paket",value:paket},
+                    {name:"Harga",value:"Rp"+harga},
+                    {name:"Metode",value:metode}
                 ],
-                timestamp: new Date()
-            }
-        ]
-    };
-
-    fetch(WEBHOOK_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    }).catch(err => console.log(err));
+                timestamp:new Date()
+            }]
+        })
+    });
 }
-
-/* ========================= */
 
 function kirim(){
     let metode=document.getElementById("metode").value;
-    let user = userid.value;
-    let nohp = document.getElementById("nohp").value;
+    let user=userid.value;
+    let nohp=document.getElementById("nohp").value;
 
-    if(!metode){
-        alert("Pilih pembayaran!");
+    if(!metode || !nohp){
+        alert("Lengkapi data!");
         return;
     }
 
-    if(!nohp){
-        alert("Isi nomor HP dulu!");
-        return;
-    }
+    kirimDiscord(user,nohp,paket,harga,metode);
 
-    // 🔥 DISCORD
-    kirimDiscord(user, nohp, paket, harga, metode);
-
-    // 🔥 WHATSAPP
     let pesan=`Halo saya ingin beli robux
 
 User ID: ${user}
@@ -223,6 +267,47 @@ Metode: ${metode}`;
     window.open("https://wa.me/6287733313467?text="+encodeURIComponent(pesan));
 }
 
+/* PARTICLE */
+const canvas=document.getElementById("bgCanvas");
+const ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let particles=[];
+for(let i=0;i<80;i++){
+    particles.push({
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height,
+        size:Math.random()*2,
+        speed:Math.random()*0.5
+    });
+}
+
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    particles.forEach(p=>{
+        p.y-=p.speed;
+        if(p.y<0){
+            p.y=canvas.height;
+            p.x=Math.random()*canvas.width;
+        }
+
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+        ctx.fillStyle="rgba(255,255,255,0.7)";
+        ctx.fill();
+    });
+
+    requestAnimationFrame(animate);
+}
+animate();
+
+window.addEventListener("resize",()=>{
+    canvas.width=window.innerWidth;
+    canvas.height=window.innerHeight;
+});
 </script>
 
 </body>
