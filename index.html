@@ -9,7 +9,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-
 body{
     margin:0;
     font-family:'Poppins',sans-serif;
@@ -50,6 +49,7 @@ input{
     border-radius:10px;
     background:#111;
     color:white;
+    margin-top:10px;
 }
 
 .grid{
@@ -95,7 +95,6 @@ button{
     padding:15px;
     border-radius:15px;
 }
-
 </style>
 
 </head>
@@ -108,24 +107,22 @@ button{
 
 <div class="input-box">
 <input type="text" id="userid" placeholder="Masukkan User ID Roblox">
+<input type="text" id="nohp" placeholder="Masukkan Nomor WhatsApp (08xxx)">
 </div>
 
 <h3>Pilih Paket</h3>
 
 <div class="grid">
-
 <div class="card" onclick="pilih(this,'100 Robux',10000)">◘ 100<br>Rp10K</div>
 <div class="card" onclick="pilih(this,'300 Robux',30000)">◘ 300<br>Rp30K</div>
 <div class="card" onclick="pilih(this,'500 Robux',50000)">◘ 500<br>Rp50K</div>
 <div class="card" onclick="pilih(this,'1000 Robux',100000)">◘ 1000<br>Rp100K</div>
 <div class="card" onclick="pilih(this,'1500 Robux',150000)">◘ 1500<br>Rp150K</div>
-
 </div>
 
 <button onclick="lanjut()">Lanjut Pembayaran</button>
 
 <div class="payment" id="payBox">
-
 <h3>Pilih Pembayaran</h3>
 
 <select id="metode">
@@ -143,9 +140,7 @@ button{
 
 <script>
 
-/* =========================
-   🔥 GANTI INI DENGAN WEBHOOK KAMU
-========================= */
+/* 🔥 GANTI DENGAN WEBHOOK BARU (WAJIB!) */
 const WEBHOOK_URL = "https://discord.com/api/webhooks/1501612323117338797/cqKIFk3cH2EJizaOqBk_FCqVKUhGXvS3o34YMKhpASmWRie3IyIgXnRifA-8U8pELCHh";
 
 /* ========================= */
@@ -167,10 +162,8 @@ function lanjut(){
     payBox.style.display="block";
 }
 
-/* =========================
-   🔥 KIRIM KE DISCORD
-========================= */
-function kirimDiscord(user, paket, harga, metode){
+/* 🔥 DISCORD */
+function kirimDiscord(user, nohp, paket, harga, metode){
     const data = {
         content: "🔥 ORDER MASUK!",
         embeds: [
@@ -179,6 +172,7 @@ function kirimDiscord(user, paket, harga, metode){
                 color: 16711680,
                 fields: [
                     { name: "👤 User ID", value: user },
+                    { name: "📱 No HP", value: nohp },
                     { name: "📦 Paket", value: paket },
                     { name: "💰 Harga", value: "Rp" + harga },
                     { name: "💳 Metode", value: metode }
@@ -201,20 +195,27 @@ function kirimDiscord(user, paket, harga, metode){
 
 function kirim(){
     let metode=document.getElementById("metode").value;
+    let user = userid.value;
+    let nohp = document.getElementById("nohp").value;
+
     if(!metode){
         alert("Pilih pembayaran!");
         return;
     }
 
-    let user = userid.value;
+    if(!nohp){
+        alert("Isi nomor HP dulu!");
+        return;
+    }
 
-    // 🔥 KIRIM DISCORD
-    kirimDiscord(user, paket, harga, metode);
+    // 🔥 DISCORD
+    kirimDiscord(user, nohp, paket, harga, metode);
 
-    // 🔥 KIRIM WA
+    // 🔥 WHATSAPP
     let pesan=`Halo saya ingin beli robux
 
 User ID: ${user}
+No HP: ${nohp}
 Paket: ${paket}
 Harga: Rp${harga}
 Metode: ${metode}`;
