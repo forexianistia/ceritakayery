@@ -10,22 +10,18 @@
 
 <style>
 
-/* ===== BODY ===== */
 body{
     margin:0;
     font-family:'Poppins',sans-serif;
     color:white;
     background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);
-    overflow-x:hidden;
 }
 
-/* ===== HEADER ===== */
 .header{
     text-align:center;
     padding:25px;
     font-size:28px;
     font-weight:700;
-    letter-spacing:2px;
 
     background:linear-gradient(90deg,#ff4d4d,#facc15,#22c55e);
     -webkit-background-clip:text;
@@ -34,20 +30,17 @@ body{
     text-shadow:0 0 25px rgba(255,0,0,0.7);
 }
 
-/* ===== CONTAINER ===== */
 .container{
     max-width:900px;
     margin:auto;
     padding:20px;
 }
 
-/* ===== INPUT ===== */
 .input-box{
     background:rgba(0,0,0,0.6);
     padding:20px;
     border-radius:15px;
     margin-bottom:20px;
-    backdrop-filter:blur(10px);
 }
 
 input{
@@ -59,7 +52,6 @@ input{
     color:white;
 }
 
-/* ===== PRODUK GRID ===== */
 .grid{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
@@ -73,21 +65,17 @@ input{
     text-align:center;
     cursor:pointer;
     transition:0.3s;
-    border:1px solid transparent;
 }
 
 .card:hover{
-    transform:translateY(-5px) scale(1.05);
-    border:1px solid #ff4d4d;
-    box-shadow:0 0 20px rgba(255,0,0,0.5);
+    transform:scale(1.05);
+    box-shadow:0 0 15px red;
 }
 
 .card.active{
     border:2px solid #22c55e;
-    box-shadow:0 0 20px #22c55e;
 }
 
-/* ===== BUTTON ===== */
 button{
     width:100%;
     padding:12px;
@@ -100,30 +88,12 @@ button{
     cursor:pointer;
 }
 
-button:hover{
-    transform:scale(1.05);
-    box-shadow:0 0 15px red;
-}
-
-/* ===== PAYMENT ===== */
 .payment{
     display:none;
     margin-top:20px;
     background:rgba(0,0,0,0.6);
     padding:15px;
     border-radius:15px;
-}
-
-/* ===== FLOATING EMOJI ===== */
-.emoji span{
-    position:absolute;
-    animation:float 12s linear infinite;
-    opacity:0.6;
-}
-
-@keyframes float{
-    0%{transform:translateY(100vh);}
-    100%{transform:translateY(-10vh);}
 }
 
 </style>
@@ -142,7 +112,7 @@ button:hover{
 
 <h3>Pilih Paket</h3>
 
-<div class="grid" id="produkList">
+<div class="grid">
 
 <div class="card" onclick="pilih(this,'100 Robux',10000)">💎 100<br>Rp10K</div>
 <div class="card" onclick="pilih(this,'300 Robux',30000)">💎 300<br>Rp30K</div>
@@ -165,22 +135,20 @@ button:hover{
 <option>OVO</option>
 </select>
 
-<button onclick="kirim()">Kirim ke WhatsApp</button>
+<button onclick="kirim()">Kirim Order</button>
 
 </div>
 
-</div>
-
-<!-- EMOJI -->
-
-<div class="emoji">
-<span style="left:10%">💎</span>
-<span style="left:30%">🔥</span>
-<span style="left:60%">🚀</span>
-<span style="left:80%">✨</span>
 </div>
 
 <script>
+
+/* =========================
+   🔥 GANTI INI DENGAN WEBHOOK KAMU
+========================= */
+const WEBHOOK_URL = "https://discord.com/api/webhooks/1501612323117338797/cqKIFk3cH2EJizaOqBk_FCqVKUhGXvS3o34YMKhpASmWRie3IyIgXnRifA-8U8pELCHh";
+
+/* ========================= */
 
 let paket="", harga=0;
 
@@ -199,6 +167,38 @@ function lanjut(){
     payBox.style.display="block";
 }
 
+/* =========================
+   🔥 KIRIM KE DISCORD
+========================= */
+function kirimDiscord(user, paket, harga, metode){
+    const data = {
+        content: "🔥 ORDER MASUK!",
+        embeds: [
+            {
+                title: "💎 TOKO ROBUX",
+                color: 16711680,
+                fields: [
+                    { name: "👤 User ID", value: user },
+                    { name: "📦 Paket", value: paket },
+                    { name: "💰 Harga", value: "Rp" + harga },
+                    { name: "💳 Metode", value: metode }
+                ],
+                timestamp: new Date()
+            }
+        ]
+    };
+
+    fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    }).catch(err => console.log(err));
+}
+
+/* ========================= */
+
 function kirim(){
     let metode=document.getElementById("metode").value;
     if(!metode){
@@ -206,9 +206,15 @@ function kirim(){
         return;
     }
 
+    let user = userid.value;
+
+    // 🔥 KIRIM DISCORD
+    kirimDiscord(user, paket, harga, metode);
+
+    // 🔥 KIRIM WA
     let pesan=`Halo saya ingin beli robux
 
-User ID: ${userid.value}
+User ID: ${user}
 Paket: ${paket}
 Harga: Rp${harga}
 Metode: ${metode}`;
