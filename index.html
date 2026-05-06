@@ -1,212 +1,221 @@
 <!DOCTYPE html>
+
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Robux Store</title>
+<title>TOKO ROBUX PRO</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-body{
-    background:
-        linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
-        url("https://tr.rbxcdn.com/180DAY-c1ea71664c1fdaae1e6ac7b8549d7121/500/280/Image/Jpeg/noFilter")
-        no-repeat center center fixed;
-    background-size: cover;
-    font-family: 'Poppins', sans-serif;
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-    margin:0;
-}
-.box{
-    background: rgba(26, 2, 2, 0.92);
-    backdrop-filter: blur(6px);
-    padding:22px;
-    width:100%;
-    max-width:380px;
-    border-radius:18px;
-    box-shadow:0 25px 60px rgba(0,0,0,.7);
-}
-h2,h3{text-align:center}
-h2{color:#fca5a5}
 
-input,select,button{
-    width:100%;
-    margin-top:12px;
-    padding:11px;
-    border-radius:10px;
-    border:none;
+/* ===== BODY ===== */
+body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    color:white;
+    background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);
+    overflow-x:hidden;
 }
-input,select{
-    background:#2a0000;
+
+/* ===== HEADER ===== */
+.header{
+    text-align:center;
+    padding:25px;
+    font-size:28px;
+    font-weight:700;
+    letter-spacing:2px;
+
+    background:linear-gradient(90deg,#ff4d4d,#facc15,#22c55e);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+
+    text-shadow:0 0 25px rgba(255,0,0,0.7);
+}
+
+/* ===== CONTAINER ===== */
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:20px;
+}
+
+/* ===== INPUT ===== */
+.input-box{
+    background:rgba(0,0,0,0.6);
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:20px;
+    backdrop-filter:blur(10px);
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#111;
     color:white;
 }
+
+/* ===== PRODUK GRID ===== */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:15px;
+}
+
+.card{
+    background:rgba(0,0,0,0.6);
+    padding:15px;
+    border-radius:15px;
+    text-align:center;
+    cursor:pointer;
+    transition:0.3s;
+    border:1px solid transparent;
+}
+
+.card:hover{
+    transform:translateY(-5px) scale(1.05);
+    border:1px solid #ff4d4d;
+    box-shadow:0 0 20px rgba(255,0,0,0.5);
+}
+
+.card.active{
+    border:2px solid #22c55e;
+    box-shadow:0 0 20px #22c55e;
+}
+
+/* ===== BUTTON ===== */
 button{
-    background:linear-gradient(135deg,#ef4444,#b91c1c);
+    width:100%;
+    padding:12px;
+    margin-top:15px;
+    border:none;
+    border-radius:10px;
+    background:linear-gradient(135deg,#ff4d4d,#ff0000);
     color:white;
     font-weight:600;
     cursor:pointer;
 }
-button:hover{transform:scale(1.05)}
 
-.price{
-    text-align:center;
-    margin-top:10px;
-    color:#fecaca;
-    font-weight:600;
+button:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 15px red;
 }
 
+/* ===== PAYMENT ===== */
 .payment{
     display:none;
-    background:#2a0000;
-    border:1px solid #7f1d1d;
-    padding:14px;
-    margin-top:18px;
-    border-radius:12px;
-    font-size:13px;
-    text-align:center;
+    margin-top:20px;
+    background:rgba(0,0,0,0.6);
+    padding:15px;
+    border-radius:15px;
 }
 
-.qris-img{
-    display:none;
-    width:100%;
-    max-width:260px;
-    margin:12px auto;
-    border-radius:12px;
-    box-shadow:0 0 25px rgba(239,68,68,.6);
+/* ===== FLOATING EMOJI ===== */
+.emoji span{
+    position:absolute;
+    animation:float 12s linear infinite;
+    opacity:0.6;
 }
 
-.upload-btn{
-    display:none;
-    margin-top:10px;
+@keyframes float{
+    0%{transform:translateY(100vh);}
+    100%{transform:translateY(-10vh);}
 }
 
-.note{
-    margin-top:10px;
-    font-size:11px;
-    color:#fecaca;
-}
 </style>
+
 </head>
 
 <body>
 
-<div class="box">
-<h2>💎 Robux Store 💎</h2>
+<div class="header">🚀 TOKO ROBUX 🚀</div>
 
-<input type="text" id="userid" placeholder="User ID Roblox">
+<div class="container">
 
-<select id="produk" onchange="updateHarga()">
-<option value="">-- Pilih Paket --</option>
-<option value="100 Robux|10000">100 Robux</option>
-<option value="300 Robux|30000">300 Robux</option>
-<option value="400 Robux|40000">400 Robux</option>
-<option value="500 Robux|50000">500 Robux</option>
-<option value="600 Robux|60000">600 Robux</option>
-<option value="700 Robux|70000">700 Robux</option>
-<option value="800 Robux (+10 bonus)|80000">800 Robux (+10 bonus)</option>
-<option value="1.000 Robux (+20 bonus)|100000">1.000 Robux (+20 bonus)</option>
-<option value="1.500 Robux (+50 bonus)|150000">1.500 Robux (+50 bonus)</option>
-<option value="2.000 Robux (+100 bonus)|200000">2.000 Robux (+100 bonus)</option>
+<div class="input-box">
+<input type="text" id="userid" placeholder="Masukkan User ID Roblox">
+</div>
+
+<h3>Pilih Paket</h3>
+
+<div class="grid" id="produkList">
+
+<div class="card" onclick="pilih(this,'100 Robux',10000)">💎 100<br>Rp10K</div>
+<div class="card" onclick="pilih(this,'300 Robux',30000)">💎 300<br>Rp30K</div>
+<div class="card" onclick="pilih(this,'500 Robux',50000)">💎 500<br>Rp50K</div>
+<div class="card" onclick="pilih(this,'1000 Robux',100000)">🔥 1000<br>Rp100K</div>
+<div class="card" onclick="pilih(this,'1500 Robux',150000)">🚀 1500<br>Rp150K</div>
+
+</div>
+
+<button onclick="lanjut()">Lanjut Pembayaran</button>
+
+<div class="payment" id="payBox">
+
+<h3>Pilih Pembayaran</h3>
+
+<select id="metode">
+<option value="">-- Pilih --</option>
+<option>QRIS</option>
+<option>DANA</option>
+<option>OVO</option>
 </select>
 
-<div class="price" id="harga">💰 Harga: -</div>
+<button onclick="kirim()">Kirim ke WhatsApp</button>
 
-<button onclick="tampilPembayaran()">Lanjut Pembayaran</button>
-
-<div class="payment" id="paymentBox">
-<h3>💳 Pilih Metode Pembayaran</h3>
-
-<select id="metode" onchange="tampilQRIS()">
-<option value="">-- Pilih Pembayaran --</option>
-<option value="QRIS">QRIS</option>
-<option value="OVO">OVO</option>
-<option value="DANA / GoPay">DANA / GoPay</option>
-<option value="BRI">BRI</option>
-<option value="SeaBank">SeaBank</option>
-</select>
-
-<img src="qris.jpg" class="qris-img" id="qrisImg">
-
-<a href="https://docs.google.com/forms/d/e/1FAIpQLSdDKw1mlvdeWjZNcoiF1DUNTRTagdBJGAhu4V5vteHjjvt62Q/viewform?usp=publish-editor"
-   target="_blank"
-   class="upload-btn"
-   id="uploadBtn"
-   style="text-decoration:none">
-
-  <button type="button">
-    📤 Upload Bukti Pembayaran
-  </button>
-
-</a>
-
-<button onclick="kirimWA()">Kirim Order ke WhatsApp</button>
-
-<div class="note">
-⏱️ Proses cepat setelah pembayaran<br>
-📸 Pastikan bukti jelas
-</div>
-</div>
 </div>
 
-<audio id="notif">
-<source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3">
-</audio>
+</div>
+
+<!-- EMOJI -->
+
+<div class="emoji">
+<span style="left:10%">💎</span>
+<span style="left:30%">🔥</span>
+<span style="left:60%">🚀</span>
+<span style="left:80%">✨</span>
+</div>
 
 <script>
-let hargaText = "";
 
-function updateHarga(){
-    let val = document.getElementById("produk").value;
-    if(!val) return;
-    let data = val.split("|");
-    hargaText = "Rp " + Number(data[1]).toLocaleString("id-ID");
-    document.getElementById("harga").innerText = "💰 Harga: " + hargaText;
+let paket="", harga=0;
+
+function pilih(el,nama,h){
+    document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
+    el.classList.add("active");
+    paket=nama;
+    harga=h;
 }
 
-function tampilPembayaran(){
-    if(!userid.value || !produk.value){
-        alert("Lengkapi data dulu!");
+function lanjut(){
+    if(!userid.value || !paket){
+        alert("Isi data dulu!");
         return;
     }
-    paymentBox.style.display="block";
+    payBox.style.display="block";
 }
 
-function tampilQRIS(){
-    let metode = document.getElementById("metode").value;
-    qrisImg.style.display = metode === "QRIS" ? "block" : "none";
-    uploadBtn.style.display = metode === "QRIS" ? "block" : "none";
-}
-
-function kirimWA(){
-    let metode = document.getElementById("metode").value;
+function kirim(){
+    let metode=document.getElementById("metode").value;
     if(!metode){
-        alert("Pilih metode pembayaran!");
+        alert("Pilih pembayaran!");
         return;
     }
 
-    notif.play();
+    let pesan=`Halo saya ingin beli robux
 
-    let id = userid.value;
-    let produk = document.getElementById("produk").value.split("|")[0];
-    let noWA = "6287733313467";
+User ID: ${userid.value}
+Paket: ${paket}
+Harga: Rp${harga}
+Metode: ${metode}`;
 
-    let pesan =
-`Halo bang saya ingin membeli robux
-
-> User ID: ${id}
-> Paket: ${produk}
-> Harga: ${hargaText}
-> Metode Bayar: ${metode}
-
-Bukti pembayaran sudah saya upload 👌`;
-
-    window.open("https://wa.me/"+noWA+"?text="+encodeURIComponent(pesan));
+    window.open("https://wa.me/6287733313467?text="+encodeURIComponent(pesan));
 }
+
 </script>
 
 </body>
