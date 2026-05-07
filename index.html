@@ -1,6 +1,7 @@
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+
 import {
     getFirestore,
     collection,
@@ -9,6 +10,8 @@ import {
     serverTimestamp
 }
 from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+/* FIREBASE CONFIG */
 
 const firebaseConfig = {
 
@@ -27,14 +30,22 @@ const firebaseConfig = {
     measurementId: "G-0RBVJ7CZ9Y"
 };
 
+/* INIT */
+
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
+/* DISCORD WEBHOOK */
+
 const WEBHOOK_URL = "https://discord.com/api/webhooks/1501612323117338797/cqKIFk3cH2EJizaOqBk_FCqVKUhGXvS3o34YMKhpASmWRie3IyIgXnRifA-8U8pELCHh";
+
+/* DATA */
 
 let paket = "";
 let harga = 0;
+
+/* PILIH PAKET */
 
 function pilih(el,nama,h){
 
@@ -49,6 +60,8 @@ function pilih(el,nama,h){
 }
 
 window.pilih = pilih;
+
+/* LANJUT */
 
 function lanjut(){
 
@@ -65,12 +78,13 @@ function lanjut(){
 
 window.lanjut = lanjut;
 
+/* PAYMENT */
+
 function showPayment(){
 
     let metode = document.getElementById("metode").value;
 
     document.getElementById("qrisBox").style.display = "none";
-
     document.getElementById("ewalletBox").style.display = "none";
 
     if(metode === "QRIS"){
@@ -86,26 +100,33 @@ function showPayment(){
 
 window.showPayment = showPayment;
 
+/* SIMPAN ORDER */
+
 async function simpanOrder(user,nohp,paket,harga,metode){
 
-    await addDoc(collection(db,"orders"),{
+    try{
 
-        user:user,
+        await addDoc(collection(db,"orders"),{
 
-        nohp:nohp,
+            user:user,
+            nohp:nohp,
+            paket:paket,
+            harga:harga,
+            metode:metode,
+            status:"Menunggu Proses",
+            createdAt:serverTimestamp()
 
-        paket:paket,
+        });
 
-        harga:harga,
+        console.log("Order berhasil disimpan");
 
-        metode:metode,
+    }catch(error){
 
-        status:"Menunggu Proses",
-
-        createdAt:serverTimestamp()
-
-    });
+        console.log("Firestore Error:",error);
+    }
 }
+
+/* DISCORD */
 
 function kirimDiscord(user,nohp,paket,harga,metode){
 
@@ -137,8 +158,7 @@ function kirimDiscord(user,nohp,paket,harga,metode){
 
                     {
                         name:"📌 Status",
-                        value:"🟡 Menunggu Proses",
-                        inline:false
+                        value:"🟡 Menunggu Proses"
                     },
 
                     {
@@ -184,6 +204,8 @@ function kirimDiscord(user,nohp,paket,harga,metode){
     });
 }
 
+/* CHAT ADMIN */
+
 async function kirim(){
 
     let metode = document.getElementById("metode").value;
@@ -217,6 +239,8 @@ Metode: ${metode}`;
 
 window.kirim = kirim;
 
+/* KONFIRMASI QRIS */
+
 async function konfirmasiQRIS(){
 
     let user = document.getElementById("userid").value;
@@ -243,7 +267,7 @@ Mohon segera diproses 🙏`;
 
 window.konfirmasiQRIS = konfirmasiQRIS;
 
-/* PARTICLE BACKGROUND */
+/* PARTICLE */
 
 const canvas = document.getElementById("bgCanvas");
 
@@ -260,12 +284,10 @@ for(let i=0;i<80;i++){
     particles.push({
 
         x:Math.random()*canvas.width,
-
         y:Math.random()*canvas.height,
-
         size:Math.random()*2,
-
         speed:Math.random()*0.5
+
     });
 }
 
@@ -280,7 +302,6 @@ function animate(){
         if(p.y < 0){
 
             p.y = canvas.height;
-
             p.x = Math.random()*canvas.width;
         }
 
@@ -307,23 +328,29 @@ animate();
 window.addEventListener("resize",()=>{
 
     canvas.width = window.innerWidth;
-
     canvas.height = window.innerHeight;
 });
 
-/* REALTIME ORDER */
+/* REALTIME */
 
-onSnapshot(collection(db,"orders"),(snapshot)=>{
+try{
 
-    console.log("Realtime order aktif");
+    onSnapshot(collection(db,"orders"),(snapshot)=>{
 
-    snapshot.docChanges().forEach((change)=>{
+        console.log("Realtime aktif");
 
-        if(change.type === "added"){
+        snapshot.docChanges().forEach((change)=>{
 
-            console.log("Order baru:",change.doc.data());
-        }
+            if(change.type === "added"){
+
+                console.log("Order baru:",change.doc.data());
+            }
+        });
     });
-});
+
+}catch(error){
+
+    console.log("Realtime Error:",error);
+}
 
 </script>
