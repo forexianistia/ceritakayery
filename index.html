@@ -13,7 +13,9 @@ from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 window.addEventListener("DOMContentLoaded",()=>{
 
-/* FIREBASE CONFIG */
+/* =========================
+   FIREBASE CONFIG
+========================= */
 
 const firebaseConfig = {
 
@@ -32,22 +34,30 @@ const firebaseConfig = {
     measurementId: "G-0RBVJ7CZ9Y"
 };
 
-/* INIT */
+/* =========================
+   INIT FIREBASE
+========================= */
 
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-/* DISCORD WEBHOOK */
+/* =========================
+   DISCORD WEBHOOK
+========================= */
 
 const WEBHOOK_URL = "https://discord.com/api/webhooks/1501612323117338797/cqKIFk3cH2EJizaOqBk_FCqVKUhGXvS3o34YMKhpASmWRie3IyIgXnRifA-8U8pELCHh";
 
-/* DATA */
+/* =========================
+   DATA
+========================= */
 
 let paket = "";
 let harga = 0;
 
-/* PILIH PAKET */
+/* =========================
+   PILIH PAKET
+========================= */
 
 function pilih(el,nama,h){
 
@@ -63,46 +73,78 @@ function pilih(el,nama,h){
 
 window.pilih = pilih;
 
-/* LANJUT */
+/* =========================
+   LANJUT
+========================= */
 
 function lanjut(){
 
-    let user = document.getElementById("userid").value;
+    let user = document.getElementById("userid");
 
-    if(!user || !paket){
+    if(!user){
+
+        console.log("Input userid tidak ditemukan");
+        return;
+    }
+
+    if(!user.value || !paket){
 
         alert("Isi data dulu!");
         return;
     }
 
-    document.getElementById("payBox").style.display = "block";
+    let payBox = document.getElementById("payBox");
+
+    if(payBox){
+
+        payBox.style.display = "block";
+    }
 }
 
 window.lanjut = lanjut;
 
-/* PAYMENT */
+/* =========================
+   PAYMENT
+========================= */
 
 function showPayment(){
 
-    let metode = document.getElementById("metode").value;
+    let metodeEl = document.getElementById("metode");
 
-    document.getElementById("qrisBox").style.display = "none";
-    document.getElementById("ewalletBox").style.display = "none";
+    if(!metodeEl) return;
 
-    if(metode === "QRIS"){
+    let metode = metodeEl.value;
 
-        document.getElementById("qrisBox").style.display = "block";
+    let qrisBox = document.getElementById("qrisBox");
+
+    let ewalletBox = document.getElementById("ewalletBox");
+
+    if(qrisBox){
+
+        qrisBox.style.display = "none";
     }
 
-    if(metode === "DANA" || metode === "OVO"){
+    if(ewalletBox){
 
-        document.getElementById("ewalletBox").style.display = "block";
+        ewalletBox.style.display = "none";
+    }
+
+    if(metode === "QRIS" && qrisBox){
+
+        qrisBox.style.display = "block";
+    }
+
+    if((metode === "DANA" || metode === "OVO") && ewalletBox){
+
+        ewalletBox.style.display = "block";
     }
 }
 
 window.showPayment = showPayment;
 
-/* SIMPAN ORDER */
+/* =========================
+   SIMPAN ORDER FIRESTORE
+========================= */
 
 async function simpanOrder(user,nohp,paket,harga,metode){
 
@@ -120,15 +162,17 @@ async function simpanOrder(user,nohp,paket,harga,metode){
 
         });
 
-        console.log("Order berhasil disimpan");
+        console.log("✅ Order berhasil disimpan");
 
     }catch(error){
 
-        console.log("Firestore Error:",error);
+        console.log("❌ Firestore Error:",error);
     }
 }
 
-/* DISCORD */
+/* =========================
+   DISCORD WEBHOOK
+========================= */
 
 function kirimDiscord(user,nohp,paket,harga,metode){
 
@@ -165,19 +209,19 @@ function kirimDiscord(user,nohp,paket,harga,metode){
 
                     {
                         name:"👤 User ID",
-                        value:user,
+                        value:user || "-",
                         inline:true
                     },
 
                     {
                         name:"📱 No HP",
-                        value:nohp,
+                        value:nohp || "-",
                         inline:true
                     },
 
                     {
                         name:"🎮 Paket",
-                        value:paket,
+                        value:paket || "-",
                         inline:true
                     },
 
@@ -189,7 +233,7 @@ function kirimDiscord(user,nohp,paket,harga,metode){
 
                     {
                         name:"💳 Metode",
-                        value:metode,
+                        value:metode || "-",
                         inline:true
                     }
 
@@ -203,18 +247,37 @@ function kirimDiscord(user,nohp,paket,harga,metode){
 
             }]
         })
+
+    }).catch(err=>{
+
+        console.log("Discord Error:",err);
+
     });
 }
 
-/* CHAT ADMIN */
+/* =========================
+   CHAT ADMIN
+========================= */
 
 async function kirim(){
 
-    let metode = document.getElementById("metode").value;
+    let metodeEl = document.getElementById("metode");
 
-    let user = document.getElementById("userid").value;
+    let userEl = document.getElementById("userid");
 
-    let nohp = document.getElementById("nohp").value;
+    let nohpEl = document.getElementById("nohp");
+
+    if(!metodeEl || !userEl || !nohpEl){
+
+        alert("Element form tidak ditemukan");
+        return;
+    }
+
+    let metode = metodeEl.value;
+
+    let user = userEl.value;
+
+    let nohp = nohpEl.value;
 
     if(!metode || !nohp){
 
@@ -235,19 +298,32 @@ Harga: Rp${harga}
 Metode: ${metode}`;
 
     window.open(
-        "https://wa.me/6287733313467?text="+encodeURIComponent(pesan)
+        "https://wa.me/6287733313467?text="+encodeURIComponent(pesan),
+        "_blank"
     );
 }
 
 window.kirim = kirim;
 
-/* KONFIRMASI QRIS */
+/* =========================
+   KONFIRMASI QRIS
+========================= */
 
 async function konfirmasiQRIS(){
 
-    let user = document.getElementById("userid").value;
+    let userEl = document.getElementById("userid");
 
-    let nohp = document.getElementById("nohp").value;
+    let nohpEl = document.getElementById("nohp");
+
+    if(!userEl || !nohpEl){
+
+        alert("Form tidak ditemukan");
+        return;
+    }
+
+    let user = userEl.value;
+
+    let nohp = nohpEl.value;
 
     await simpanOrder(user,nohp,paket,harga,"QRIS");
 
@@ -263,93 +339,102 @@ Harga: Rp${harga}
 Mohon segera diproses 🙏`;
 
     window.open(
-        "https://wa.me/6287733313467?text="+encodeURIComponent(pesan)
+        "https://wa.me/6287733313467?text="+encodeURIComponent(pesan),
+        "_blank"
     );
 }
 
 window.konfirmasiQRIS = konfirmasiQRIS;
 
-/* PARTICLE */
+/* =========================
+   PARTICLE BACKGROUND
+========================= */
 
 const canvas = document.getElementById("bgCanvas");
 
 if(canvas){
 
-const ctx = canvas.getContext("2d");
-
-canvas.width = window.innerWidth;
-
-canvas.height = window.innerHeight;
-
-let particles = [];
-
-for(let i=0;i<80;i++){
-
-    particles.push({
-
-        x:Math.random()*canvas.width,
-        y:Math.random()*canvas.height,
-        size:Math.random()*2,
-        speed:Math.random()*0.5
-
-    });
-}
-
-function animate(){
-
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    particles.forEach(p=>{
-
-        p.y -= p.speed;
-
-        if(p.y < 0){
-
-            p.y = canvas.height;
-            p.x = Math.random()*canvas.width;
-        }
-
-        ctx.beginPath();
-
-        ctx.arc(
-            p.x,
-            p.y,
-            p.size,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fillStyle = "rgba(255,255,255,0.7)";
-
-        ctx.fill();
-    });
-
-    requestAnimationFrame(animate);
-}
-
-animate();
-
-window.addEventListener("resize",()=>{
+    const ctx = canvas.getContext("2d");
 
     canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-});
 
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+
+    for(let i=0;i<80;i++){
+
+        particles.push({
+
+            x:Math.random()*canvas.width,
+            y:Math.random()*canvas.height,
+            size:Math.random()*2,
+            speed:Math.random()*0.5
+
+        });
+    }
+
+    function animate(){
+
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+
+        particles.forEach(p=>{
+
+            p.y -= p.speed;
+
+            if(p.y < 0){
+
+                p.y = canvas.height;
+                p.x = Math.random()*canvas.width;
+            }
+
+            ctx.beginPath();
+
+            ctx.arc(
+                p.x,
+                p.y,
+                p.size,
+                0,
+                Math.PI*2
+            );
+
+            ctx.fillStyle = "rgba(255,255,255,0.7)";
+
+            ctx.fill();
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener("resize",()=>{
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+    });
+
+}else{
+
+    console.log("Canvas bgCanvas tidak ditemukan");
 }
 
-/* REALTIME */
+/* =========================
+   REALTIME ORDER
+========================= */
 
 try{
 
     onSnapshot(collection(db,"orders"),(snapshot)=>{
 
-        console.log("Realtime aktif");
+        console.log("✅ Realtime aktif");
 
         snapshot.docChanges().forEach((change)=>{
 
             if(change.type === "added"){
 
-                console.log("Order baru:",change.doc.data());
+                console.log("🛒 Order baru:",change.doc.data());
             }
         });
     });
@@ -360,4 +445,5 @@ try{
 }
 
 });
+
 </script>
