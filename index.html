@@ -394,44 +394,47 @@ function kirimDiscord(user,nohp,paket,harga,metode){
 
                 fields:[
 
-                    {
-                        name:"📌 Status",
-                        value:"🟡 Menunggu Proses",
-                        inline:false
-                    },
+    {
+        name:"📌 Status Order",
+        value:
+`🟡 Pending
+🟢 Success
+❌ Failed
+✖ Cancel`,
+        inline:false
+    },
 
-                    {
-                        name:"👤 User ID",
-                        value:user,
-                        inline:true
-                    },
+    {
+        name:"👤 User ID",
+        value:user,
+        inline:true
+    },
 
-                    {
-                        name:"📱 No HP",
-                        value:nohp,
-                        inline:true
-                    },
+    {
+        name:"📱 No HP",
+        value:nohp,
+        inline:true
+    },
 
-                    {
-                        name:"🎮 Paket",
-                        value:paket,
-                        inline:true
-                    },
+    {
+        name:"🎮 Paket",
+        value:paket,
+        inline:true
+    },
 
-                    {
-                        name:"💰 Harga",
-                        value:"Rp"+harga,
-                        inline:true
-                    },
+    {
+        name:"💰 Harga",
+        value:"Rp"+harga,
+        inline:true
+    },
 
-                    {
-                        name:"💳 Metode",
-                        value:metode,
-                        inline:true
-                    }
+    {
+        name:"💳 Metode",
+        value:metode,
+        inline:true
+    }
 
-                ],
-
+],
                 footer:{
                     text:"TOKO ROBUX PRO • AUTO ORDER"
                 },
