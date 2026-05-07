@@ -1,63 +1,332 @@
-<script type="module">
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOKO ROBUX PRO</title>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-import {
-    getFirestore,
-    collection,
-    addDoc,
-    onSnapshot,
-    serverTimestamp
+<style>
+
+body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    color:white;
+    background:linear-gradient(270deg,#0f0c29,#302b63,#24243e,#0f0c29);
+    background-size:600% 600%;
+    animation:bgGerak 15s ease infinite;
 }
-from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-window.addEventListener("DOMContentLoaded",()=>{
+@keyframes bgGerak{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
 
-/* =========================
-   FIREBASE CONFIG
-========================= */
+#bgCanvas{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:-1;
+}
 
-const firebaseConfig = {
+.header{
+    text-align:center;
+    padding:25px;
+    font-size:28px;
+    font-weight:700;
+    background:linear-gradient(90deg,#ff4d4d,#facc15,#22c55e);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    text-shadow:0 0 25px rgba(255,0,0,0.7);
+}
 
-    apiKey: "AIzaSyALuiOK0XIrbGtaUnnFsTvpYnTwxqi2Rsg",
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:20px;
+}
 
-    authDomain: "trading-journal-32050.firebaseapp.com",
+.input-box{
+    background:rgba(0,0,0,0.6);
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:20px;
+    backdrop-filter:blur(10px);
+}
 
-    projectId: "trading-journal-32050",
+input,select{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#111;
+    color:white;
+    margin-top:10px;
+    box-sizing:border-box;
+}
 
-    storageBucket: "trading-journal-32050.firebasestorage.app",
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:15px;
+}
 
-    messagingSenderId: "435004813714",
+.card{
+    background:rgba(0,0,0,0.6);
+    padding:15px;
+    border-radius:15px;
+    text-align:center;
+    cursor:pointer;
+    transition:0.3s;
+}
 
-    appId: "1:435004813714:web:219feac13109bf3b3e514b",
+.card:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 15px red;
+}
 
-    measurementId: "G-0RBVJ7CZ9Y"
-};
+.card.active{
+    border:2px solid #22c55e;
+    box-shadow:0 0 20px #22c55e;
+}
 
-/* =========================
-   INIT FIREBASE
-========================= */
+button{
+    width:100%;
+    padding:12px;
+    margin-top:15px;
+    border:none;
+    border-radius:10px;
+    background:linear-gradient(135deg,#ff4d4d,#ff0000);
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
 
-const app = initializeApp(firebaseConfig);
+button:hover{
+    transform:scale(1.03);
+}
 
-const db = getFirestore(app);
+.payment{
+    display:none;
+    margin-top:20px;
+    background:rgba(0,0,0,0.6);
+    padding:15px;
+    border-radius:15px;
+}
 
-/* =========================
-   DISCORD WEBHOOK
-========================= */
+.note-box{
+    margin-top:12px;
+    padding:12px;
+    border-radius:12px;
+    background:rgba(0,0,0,0.6);
+    box-shadow:0 0 15px rgba(255,255,255,0.1);
+}
+
+.note-item{
+    font-size:13px;
+    padding:6px;
+    margin:4px 0;
+    border-radius:8px;
+    background:rgba(255,255,255,0.05);
+    text-align:center;
+    color:#facc15;
+}
+
+.emoji span{
+    position:fixed;
+    bottom:-50px;
+    font-size:22px;
+    opacity:0.7;
+    animation:naik 12s linear infinite;
+    filter:drop-shadow(0 0 10px #fff);
+}
+
+.emoji span:nth-child(1){left:10%;}
+.emoji span:nth-child(2){left:25%;}
+.emoji span:nth-child(3){left:45%;}
+.emoji span:nth-child(4){left:65%;}
+.emoji span:nth-child(5){left:80%;}
+.emoji span:nth-child(6){left:90%;}
+
+@keyframes naik{
+    0%{
+        transform:translateY(0) rotate(0);
+        opacity:0;
+    }
+
+    20%{
+        opacity:0.8;
+    }
+
+    100%{
+        transform:translateY(-120vh) rotate(360deg);
+        opacity:0;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<div class="header">🚀 TOKO ROBUX 🚀</div>
+
+<div class="container">
+
+<div class="input-box">
+<input type="text" id="userid" placeholder="Masukkan User ID Roblox">
+<input type="text" id="nohp" placeholder="Masukkan Nomor WhatsApp (08xxx)">
+</div>
+
+<h3>Pilih Paket</h3>
+
+<div class="grid">
+
+<div class="card" onclick="pilih(this,'100 Robux',12000)">
+◘ 100<br>Rp12K
+</div>
+
+<div class="card" onclick="pilih(this,'300 Robux',36000)">
+◘ 300<br>Rp36K
+</div>
+
+<div class="card" onclick="pilih(this,'500 Robux',60000)">
+◘ 500<br>Rp60K
+</div>
+
+<div class="card" onclick="pilih(this,'1000 Robux',120000)">
+◘ 1000<br>Rp120K
+</div>
+
+<div class="card" onclick="pilih(this,'1500 Robux',180000)">
+◘ 1500<br>Rp180K
+</div>
+
+</div>
+
+<button onclick="lanjut()">Lanjut Pembayaran</button>
+
+<div class="payment" id="payBox">
+
+<h3>Pilih Pembayaran</h3>
+
+<select id="metode" onchange="showPayment()">
+<option value="">-- Pilih --</option>
+<option value="QRIS">QRIS</option>
+<option value="DANA">DANA</option>
+<option value="OVO">OVO</option>
+</select>
+
+<!-- QRIS -->
+
+<div id="qrisBox" style="
+display:none;
+margin-top:20px;
+text-align:center;
+">
+
+<img src="https://i.imgur.com/cDaQCNP.jpeg"
+style="
+width:260px;
+border-radius:18px;
+box-shadow:0 0 25px #22c55e;
+">
+
+<p style="
+margin-top:12px;
+color:#22c55e;
+font-weight:600;
+">
+✅ Scan QRIS untuk pembayaran
+</p>
+
+<p style="
+font-size:13px;
+opacity:0.8;
+line-height:1.6;
+">
+Setelah pembayaran berhasil,
+klik tombol konfirmasi di bawah ini
+</p>
+
+<button onclick="konfirmasiQRIS()" style="
+background:linear-gradient(135deg,#22c55e,#16a34a);
+">
+✔ Saya Sudah Bayar
+</button>
+
+</div>
+
+<!-- E-WALLET -->
+
+<div id="ewalletBox" style="
+display:none;
+margin-top:20px;
+">
+
+<div style="
+background:rgba(255,255,255,0.05);
+padding:15px;
+border-radius:14px;
+text-align:center;
+">
+
+<h3>📱 Pembayaran E-Wallet</h3>
+
+<p style="
+font-size:14px;
+opacity:0.8;
+line-height:1.6;
+">
+Untuk pembayaran DANA / OVO,
+silakan lanjut chat admin terlebih dahulu
+</p>
+
+<button onclick="kirim()" style="
+background:linear-gradient(135deg,#3b82f6,#2563eb);
+">
+💬 Chat Admin Sekarang
+</button>
+
+</div>
+
+</div>
+
+<!-- NOTES -->
+
+<div class="note-box">
+<div class="note-item">⚡ Proses cepat (1–5 menit)</div>
+<div class="note-item">💎 Robux instan langsung masuk 😊</div>
+<div class="note-item">🔒 Aman & terpercaya</div>
+<div class="note-item">📩 Wajib kirim bukti pembayaran</div>
+</div>
+
+</div>
+
+</div>
+
+<div class="emoji">
+<span>💎</span>
+<span>🔥</span>
+<span>🚀</span>
+<span>✨</span>
+<span>🎮</span>
+<span>💰</span>
+</div>
+
+<script>
 
 const WEBHOOK_URL = "https://discord.com/api/webhooks/1501612323117338797/cqKIFk3cH2EJizaOqBk_FCqVKUhGXvS3o34YMKhpASmWRie3IyIgXnRifA-8U8pELCHh";
 
-/* =========================
-   DATA
-========================= */
-
 let paket = "";
 let harga = 0;
-
-/* =========================
-   PILIH PAKET
-========================= */
 
 function pilih(el,nama,h){
 
@@ -71,115 +340,38 @@ function pilih(el,nama,h){
     harga = h;
 }
 
-window.pilih = pilih;
-
-/* =========================
-   LANJUT
-========================= */
-
 function lanjut(){
 
-    let user = document.getElementById("userid");
+    let user = document.getElementById("userid").value;
 
-    if(!user){
-
-        console.log("Input userid tidak ditemukan");
-        return;
-    }
-
-    if(!user.value || !paket){
-
+    if(!user || !paket){
         alert("Isi data dulu!");
         return;
     }
 
-    let payBox = document.getElementById("payBox");
-
-    if(payBox){
-
-        payBox.style.display = "block";
-    }
+    document.getElementById("payBox").style.display = "block";
 }
-
-window.lanjut = lanjut;
-
-/* =========================
-   PAYMENT
-========================= */
 
 function showPayment(){
 
-    let metodeEl = document.getElementById("metode");
+    let metode = document.getElementById("metode").value;
 
-    if(!metodeEl) return;
+    document.getElementById("qrisBox").style.display = "none";
+    document.getElementById("ewalletBox").style.display = "none";
 
-    let metode = metodeEl.value;
-
-    let qrisBox = document.getElementById("qrisBox");
-
-    let ewalletBox = document.getElementById("ewalletBox");
-
-    if(qrisBox){
-
-        qrisBox.style.display = "none";
+    if(metode === "QRIS"){
+        document.getElementById("qrisBox").style.display = "block";
     }
 
-    if(ewalletBox){
-
-        ewalletBox.style.display = "none";
-    }
-
-    if(metode === "QRIS" && qrisBox){
-
-        qrisBox.style.display = "block";
-    }
-
-    if((metode === "DANA" || metode === "OVO") && ewalletBox){
-
-        ewalletBox.style.display = "block";
+    if(metode === "DANA" || metode === "OVO"){
+        document.getElementById("ewalletBox").style.display = "block";
     }
 }
-
-window.showPayment = showPayment;
-
-/* =========================
-   SIMPAN ORDER FIRESTORE
-========================= */
-
-async function simpanOrder(user,nohp,paket,harga,metode){
-
-    try{
-
-        await addDoc(collection(db,"orders"),{
-
-            user:user,
-            nohp:nohp,
-            paket:paket,
-            harga:harga,
-            metode:metode,
-            status:"Menunggu Proses",
-            createdAt:serverTimestamp()
-
-        });
-
-        console.log("✅ Order berhasil disimpan");
-
-    }catch(error){
-
-        console.log("❌ Firestore Error:",error);
-    }
-}
-
-/* =========================
-   DISCORD WEBHOOK
-========================= */
 
 function kirimDiscord(user,nohp,paket,harga,metode){
 
     fetch(WEBHOOK_URL,{
-
         method:"POST",
-
         headers:{
             "Content-Type":"application/json"
         },
@@ -204,24 +396,25 @@ function kirimDiscord(user,nohp,paket,harga,metode){
 
                     {
                         name:"📌 Status",
-                        value:"🟡 Menunggu Proses"
+                        value:"🟡 Menunggu Proses",
+                        inline:false
                     },
 
                     {
                         name:"👤 User ID",
-                        value:user || "-",
+                        value:user,
                         inline:true
                     },
 
                     {
                         name:"📱 No HP",
-                        value:nohp || "-",
+                        value:nohp,
                         inline:true
                     },
 
                     {
                         name:"🎮 Paket",
-                        value:paket || "-",
+                        value:paket,
                         inline:true
                     },
 
@@ -233,7 +426,7 @@ function kirimDiscord(user,nohp,paket,harga,metode){
 
                     {
                         name:"💳 Metode",
-                        value:metode || "-",
+                        value:metode,
                         inline:true
                     }
 
@@ -247,45 +440,20 @@ function kirimDiscord(user,nohp,paket,harga,metode){
 
             }]
         })
-
-    }).catch(err=>{
-
-        console.log("Discord Error:",err);
-
     });
 }
 
-/* =========================
-   CHAT ADMIN
-========================= */
+function kirim(){
 
-async function kirim(){
-
-    let metodeEl = document.getElementById("metode");
-
-    let userEl = document.getElementById("userid");
-
-    let nohpEl = document.getElementById("nohp");
-
-    if(!metodeEl || !userEl || !nohpEl){
-
-        alert("Element form tidak ditemukan");
-        return;
-    }
-
-    let metode = metodeEl.value;
-
-    let user = userEl.value;
-
-    let nohp = nohpEl.value;
+    let metode = document.getElementById("metode").value;
+    let user = document.getElementById("userid").value;
+    let nohp = document.getElementById("nohp").value;
 
     if(!metode || !nohp){
 
         alert("Lengkapi data!");
         return;
     }
-
-    await simpanOrder(user,nohp,paket,harga,metode);
 
     kirimDiscord(user,nohp,paket,harga,metode);
 
@@ -298,34 +466,14 @@ Harga: Rp${harga}
 Metode: ${metode}`;
 
     window.open(
-        "https://wa.me/6287733313467?text="+encodeURIComponent(pesan),
-        "_blank"
+        "https://wa.me/6287733313467?text="+encodeURIComponent(pesan)
     );
 }
 
-window.kirim = kirim;
+function konfirmasiQRIS(){
 
-/* =========================
-   KONFIRMASI QRIS
-========================= */
-
-async function konfirmasiQRIS(){
-
-    let userEl = document.getElementById("userid");
-
-    let nohpEl = document.getElementById("nohp");
-
-    if(!userEl || !nohpEl){
-
-        alert("Form tidak ditemukan");
-        return;
-    }
-
-    let user = userEl.value;
-
-    let nohp = nohpEl.value;
-
-    await simpanOrder(user,nohp,paket,harga,"QRIS");
+    let user = document.getElementById("userid").value;
+    let nohp = document.getElementById("nohp").value;
 
     kirimDiscord(user,nohp,paket,harga,"QRIS");
 
@@ -339,111 +487,74 @@ Harga: Rp${harga}
 Mohon segera diproses 🙏`;
 
     window.open(
-        "https://wa.me/6287733313467?text="+encodeURIComponent(pesan),
-        "_blank"
+        "https://wa.me/6287733313467?text="+encodeURIComponent(pesan)
     );
 }
 
-window.konfirmasiQRIS = konfirmasiQRIS;
-
-/* =========================
-   PARTICLE BACKGROUND
-========================= */
+/* PARTICLE BACKGROUND */
 
 const canvas = document.getElementById("bgCanvas");
+const ctx = canvas.getContext("2d");
 
-if(canvas){
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-    const ctx = canvas.getContext("2d");
+let particles = [];
+
+for(let i=0;i<80;i++){
+
+    particles.push({
+
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height,
+        size:Math.random()*2,
+        speed:Math.random()*0.5
+
+    });
+}
+
+function animate(){
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    particles.forEach(p=>{
+
+        p.y -= p.speed;
+
+        if(p.y < 0){
+
+            p.y = canvas.height;
+            p.x = Math.random()*canvas.width;
+        }
+
+        ctx.beginPath();
+
+        ctx.arc(
+            p.x,
+            p.y,
+            p.size,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fillStyle = "rgba(255,255,255,0.7)";
+        ctx.fill();
+
+    });
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+window.addEventListener("resize",()=>{
 
     canvas.width = window.innerWidth;
-
     canvas.height = window.innerHeight;
-
-    let particles = [];
-
-    for(let i=0;i<80;i++){
-
-        particles.push({
-
-            x:Math.random()*canvas.width,
-            y:Math.random()*canvas.height,
-            size:Math.random()*2,
-            speed:Math.random()*0.5
-
-        });
-    }
-
-    function animate(){
-
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-
-        particles.forEach(p=>{
-
-            p.y -= p.speed;
-
-            if(p.y < 0){
-
-                p.y = canvas.height;
-                p.x = Math.random()*canvas.width;
-            }
-
-            ctx.beginPath();
-
-            ctx.arc(
-                p.x,
-                p.y,
-                p.size,
-                0,
-                Math.PI*2
-            );
-
-            ctx.fillStyle = "rgba(255,255,255,0.7)";
-
-            ctx.fill();
-        });
-
-        requestAnimationFrame(animate);
-    }
-
-    animate();
-
-    window.addEventListener("resize",()=>{
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-    });
-
-}else{
-
-    console.log("Canvas bgCanvas tidak ditemukan");
-}
-
-/* =========================
-   REALTIME ORDER
-========================= */
-
-try{
-
-    onSnapshot(collection(db,"orders"),(snapshot)=>{
-
-        console.log("✅ Realtime aktif");
-
-        snapshot.docChanges().forEach((change)=>{
-
-            if(change.type === "added"){
-
-                console.log("🛒 Order baru:",change.doc.data());
-            }
-        });
-    });
-
-}catch(error){
-
-    console.log("Realtime Error:",error);
-}
 
 });
 
 </script>
+
+</body>
+</html>
