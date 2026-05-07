@@ -154,19 +154,9 @@ button:hover{
 .emoji span:nth-child(6){left:90%;}
 
 @keyframes naik{
-    0%{
-        transform:translateY(0) rotate(0);
-        opacity:0;
-    }
-
-    20%{
-        opacity:0.8;
-    }
-
-    100%{
-        transform:translateY(-120vh) rotate(360deg);
-        opacity:0;
-    }
+    0%{transform:translateY(0) rotate(0);opacity:0;}
+    20%{opacity:0.8;}
+    100%{transform:translateY(-120vh) rotate(360deg);opacity:0;}
 }
 
 </style>
@@ -224,88 +214,25 @@ button:hover{
 <option value="OVO">OVO</option>
 </select>
 
-<!-- QRIS -->
-
-<div id="qrisBox" style="
-display:none;
-margin-top:20px;
-text-align:center;
-">
-
-<img src="https://i.imgur.com/cDaQCNP.jpeg"
-style="
-width:260px;
-border-radius:18px;
-box-shadow:0 0 25px #22c55e;
-">
-
-<p style="
-margin-top:12px;
-color:#22c55e;
-font-weight:600;
-">
-✅ Scan QRIS untuk pembayaran
-</p>
-
-<p style="
-font-size:13px;
-opacity:0.8;
-line-height:1.6;
-">
-Setelah pembayaran berhasil,
-klik tombol konfirmasi di bawah ini
-</p>
-
-<button onclick="konfirmasiQRIS()" style="
-background:linear-gradient(135deg,#22c55e,#16a34a);
-">
-✔ Saya Sudah Bayar
-</button>
-
+<div id="qrisBox" style="display:none;margin-top:20px;text-align:center;">
+<img src="https://i.imgur.com/cDaQCNP.jpeg" style="width:260px;border-radius:18px;box-shadow:0 0 25px #22c55e;">
+<p style="margin-top:12px;color:#22c55e;font-weight:600;">✅ Scan QRIS untuk pembayaran</p>
+<button onclick="konfirmasiQRIS()" style="background:linear-gradient(135deg,#22c55e,#16a34a);">✔ Saya Sudah Bayar</button>
 </div>
 
-<!-- E-WALLET -->
-
-<div id="ewalletBox" style="
-display:none;
-margin-top:20px;
-">
-
-<div style="
-background:rgba(255,255,255,0.05);
-padding:15px;
-border-radius:14px;
-text-align:center;
-">
-
-<h3>📱 Pembayaran E-Wallet</h3>
-
-<p style="
-font-size:14px;
-opacity:0.8;
-line-height:1.6;
-">
-Untuk pembayaran DANA / OVO,
-silakan lanjut chat admin terlebih dahulu
-</p>
-
-<button onclick="kirim()" style="
-background:linear-gradient(135deg,#3b82f6,#2563eb);
-">
-💬 Chat Admin Sekarang
-</button>
-
+<div id="ewalletBox" style="display:none;margin-top:20px;">
+<div style="background:rgba(255,255,255,0.05);padding:15px;border-radius:14px;text-align:center;">
+<h3>📱 E-Wallet</h3>
+<p>Silakan lanjut chat admin</p>
+<button onclick="kirim()" style="background:linear-gradient(135deg,#3b82f6,#2563eb);">💬 Chat Admin</button>
 </div>
-
 </div>
-
-<!-- NOTES -->
 
 <div class="note-box">
 <div class="note-item">⚡ Proses cepat (1–5 menit)</div>
-<div class="note-item">💎 Robux instan langsung masuk 😊</div>
-<div class="note-item">🔒 Aman & terpercaya</div>
-<div class="note-item">📩 Wajib kirim bukti pembayaran</div>
+<div class="note-item">💎 Robux instan</div>
+<div class="note-item">🔒 Aman</div>
+<div class="note-item">📩 Wajib bukti pembayaran</div>
 </div>
 
 </div>
@@ -313,249 +240,111 @@ background:linear-gradient(135deg,#3b82f6,#2563eb);
 </div>
 
 <div class="emoji">
-<span>💎</span>
-<span>🔥</span>
-<span>🚀</span>
-<span>✨</span>
-<span>🎮</span>
-<span>💰</span>
+<span>💎</span><span>🔥</span><span>🚀</span><span>✨</span><span>🎮</span><span>💰</span>
 </div>
 
 <script>
 
 const WEBHOOK_URL = "https://discord.com/api/webhooks/1501612323117338797/cqKIFk3cH2EJizaOqBk_FCqVKUhGXvS3o34YMKhpASmWRie3IyIgXnRifA-8U8pELCHh";
 
-let paket = "";
-let harga = 0;
+let paket="", harga=0;
+
+/* AVATAR ROBLOX */
+async function getAvatar(username){
+    try{
+        let r = await fetch(`https://api.roblox.com/users/get-by-username?username=${username}`);
+        let d = await r.json();
+        if(!d.Id) return "https://tr.rbxcdn.com/default-avatar.png";
+        return `https://www.roblox.com/headshot-thumbnail/image?userId=${d.Id}&width=420&height=420&format=png`;
+    }catch{
+        return "https://tr.rbxcdn.com/default-avatar.png";
+    }
+}
 
 function pilih(el,nama,h){
-
-    document.querySelectorAll(".card").forEach(c=>{
-        c.classList.remove("active");
-    });
-
+    document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
     el.classList.add("active");
-
-    paket = nama;
-    harga = h;
+    paket=nama; harga=h;
 }
 
 function lanjut(){
-
-    let user = document.getElementById("userid").value;
-
-    if(!user || !paket){
-        alert("Isi data dulu!");
-        return;
-    }
-
-    document.getElementById("payBox").style.display = "block";
+    let user=document.getElementById("userid").value;
+    if(!user||!paket) return alert("Isi data!");
+    document.getElementById("payBox").style.display="block";
 }
 
 function showPayment(){
-
-    let metode = document.getElementById("metode").value;
-
-    document.getElementById("qrisBox").style.display = "none";
-    document.getElementById("ewalletBox").style.display = "none";
-
-    if(metode === "QRIS"){
-        document.getElementById("qrisBox").style.display = "block";
-    }
-
-    if(metode === "DANA" || metode === "OVO"){
-        document.getElementById("ewalletBox").style.display = "block";
-    }
+    let m=document.getElementById("metode").value;
+    qrisBox.style.display=m==="QRIS"?"block":"none";
+    ewalletBox.style.display=(m==="DANA"||m==="OVO")?"block":"none";
 }
 
-function kirimDiscord(user,nohp,paket,harga,metode){
+/* DISCORD + AVATAR */
+async function kirimDiscord(user,nohp,paket,harga,metode){
+
+    let avatar = await getAvatar(user);
 
     fetch(WEBHOOK_URL,{
         method:"POST",
-        headers:{
-            "Content-Type":"application/json"
-        },
-
+        headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
-
             content:"🔥 ORDER MASUK!",
-
             embeds:[{
-
                 title:"💎 TOKO ROBUX",
-
-                description:"🛒 Pesanan baru berhasil masuk",
-
                 color:5763719,
-
-                thumbnail:{
-                    url:"https://i.imgur.com/cDaQCNP.jpeg"
-                },
-
+                thumbnail:{url:avatar},
+                image:{url:avatar},
                 fields:[
-
-    {
-        name:"📌 Status Order",
-        value:
-`🟡 Pending
-🟢 Success
-❌ Failed
-✖ Cancel`,
-        inline:false
-    },
-
-    {
-        name:"👤 User ID",
-        value:user,
-        inline:true
-    },
-
-    {
-        name:"📱 No HP",
-        value:nohp,
-        inline:true
-    },
-
-    {
-        name:"🎮 Paket",
-        value:paket,
-        inline:true
-    },
-
-    {
-        name:"💰 Harga",
-        value:"Rp"+harga,
-        inline:true
-    },
-
-    {
-        name:"💳 Metode",
-        value:metode,
-        inline:true
-    }
-
-],
-                footer:{
-                    text:"TOKO ROBUX PRO • AUTO ORDER"
-                },
-
+                    {name:"User",value:user},
+                    {name:"No HP",value:nohp},
+                    {name:"Paket",value:paket},
+                    {name:"Harga",value:"Rp"+harga},
+                    {name:"Metode",value:metode}
+                ],
+                footer:{text:"TOKO ROBUX PRO"},
                 timestamp:new Date()
-
             }]
         })
     });
 }
 
-function kirim(){
-
-    let metode = document.getElementById("metode").value;
-    let user = document.getElementById("userid").value;
-    let nohp = document.getElementById("nohp").value;
-
-    if(!metode || !nohp){
-
-        alert("Lengkapi data!");
-        return;
-    }
-
-    kirimDiscord(user,nohp,paket,harga,metode);
-
-    let pesan = `Halo saya ingin beli robux
-
-User ID: ${user}
-No HP: ${nohp}
-Paket: ${paket}
-Harga: Rp${harga}
-Metode: ${metode}`;
-
-    window.open(
-        "https://wa.me/6287733313467?text="+encodeURIComponent(pesan)
-    );
+async function kirim(){
+    let m=document.getElementById("metode").value;
+    let u=document.getElementById("userid").value;
+    let n=document.getElementById("nohp").value;
+    if(!m||!n) return alert("Lengkapi data!");
+    await kirimDiscord(u,n,paket,harga,m);
+    window.open("https://wa.me/6287733313467");
 }
 
-function konfirmasiQRIS(){
-
-    let user = document.getElementById("userid").value;
-    let nohp = document.getElementById("nohp").value;
-
-    kirimDiscord(user,nohp,paket,harga,"QRIS");
-
-    let pesan = `Halo admin saya sudah bayar QRIS
-
-User ID: ${user}
-No HP: ${nohp}
-Paket: ${paket}
-Harga: Rp${harga}
-
-Mohon segera diproses 🙏`;
-
-    window.open(
-        "https://wa.me/6287733313467?text="+encodeURIComponent(pesan)
-    );
+async function konfirmasiQRIS(){
+    let u=document.getElementById("userid").value;
+    let n=document.getElementById("nohp").value;
+    await kirimDiscord(u,n,paket,harga,"QRIS");
+    window.open("https://wa.me/6287733313467");
 }
 
-/* PARTICLE BACKGROUND */
+/* BACKGROUND */
+const canvas=document.getElementById("bgCanvas");
+const ctx=canvas.getContext("2d");
+canvas.width=innerWidth;canvas.height=innerHeight;
 
-const canvas = document.getElementById("bgCanvas");
-const ctx = canvas.getContext("2d");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let particles = [];
-
-for(let i=0;i<80;i++){
-
-    particles.push({
-
-        x:Math.random()*canvas.width,
-        y:Math.random()*canvas.height,
-        size:Math.random()*2,
-        speed:Math.random()*0.5
-
-    });
-}
+let particles=[];
+for(let i=0;i<80;i++)particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,size:Math.random()*2,speed:Math.random()*0.5});
 
 function animate(){
-
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    particles.forEach(p=>{
-
-        p.y -= p.speed;
-
-        if(p.y < 0){
-
-            p.y = canvas.height;
-            p.x = Math.random()*canvas.width;
-        }
-
-        ctx.beginPath();
-
-        ctx.arc(
-            p.x,
-            p.y,
-            p.size,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fillStyle = "rgba(255,255,255,0.7)";
-        ctx.fill();
-
-    });
-
-    requestAnimationFrame(animate);
-}
-
-animate();
-
-window.addEventListener("resize",()=>{
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
+ctx.clearRect(0,0,canvas.width,canvas.height);
+particles.forEach(p=>{
+p.y-=p.speed;
+if(p.y<0){p.y=canvas.height;p.x=Math.random()*canvas.width;}
+ctx.beginPath();
+ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+ctx.fillStyle="white";
+ctx.fill();
 });
+requestAnimationFrame(animate);
+}
+animate();
 
 </script>
 
