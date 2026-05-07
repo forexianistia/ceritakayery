@@ -1,327 +1,35 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TOKO ROBUX PRO</title>
+<script type="module">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-<style>
-
-body{
-    margin:0;
-    font-family:'Poppins',sans-serif;
-    color:white;
-    background:linear-gradient(270deg,#0f0c29,#302b63,#24243e,#0f0c29);
-    background-size:600% 600%;
-    animation:bgGerak 15s ease infinite;
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    onSnapshot,
+    serverTimestamp
 }
+from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-@keyframes bgGerak{
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
-}
+const firebaseConfig = {
 
-#bgCanvas{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    z-index:-1;
-}
+    apiKey: "AIzaSyALuiOK0XIrbGtaUnnFsTvpYnTwxqi2Rsg",
 
-.header{
-    text-align:center;
-    padding:25px;
-    font-size:28px;
-    font-weight:700;
-    background:linear-gradient(90deg,#ff4d4d,#facc15,#22c55e);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    text-shadow:0 0 25px rgba(255,0,0,0.7);
-}
+    authDomain: "trading-journal-32050.firebaseapp.com",
 
-.container{
-    max-width:900px;
-    margin:auto;
-    padding:20px;
-}
+    projectId: "trading-journal-32050",
 
-.input-box{
-    background:rgba(0,0,0,0.6);
-    padding:20px;
-    border-radius:15px;
-    margin-bottom:20px;
-    backdrop-filter:blur(10px);
-}
+    storageBucket: "trading-journal-32050.firebasestorage.app",
 
-input,select{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:10px;
-    background:#111;
-    color:white;
-    margin-top:10px;
-    box-sizing:border-box;
-}
+    messagingSenderId: "435004813714",
 
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-    gap:15px;
-}
+    appId: "1:435004813714:web:219feac13109bf3b3e514b",
 
-.card{
-    background:rgba(0,0,0,0.6);
-    padding:15px;
-    border-radius:15px;
-    text-align:center;
-    cursor:pointer;
-    transition:0.3s;
-}
+    measurementId: "G-0RBVJ7CZ9Y"
+};
 
-.card:hover{
-    transform:scale(1.05);
-    box-shadow:0 0 15px red;
-}
+const app = initializeApp(firebaseConfig);
 
-.card.active{
-    border:2px solid #22c55e;
-    box-shadow:0 0 20px #22c55e;
-}
-
-button{
-    width:100%;
-    padding:12px;
-    margin-top:15px;
-    border:none;
-    border-radius:10px;
-    background:linear-gradient(135deg,#ff4d4d,#ff0000);
-    color:white;
-    font-weight:600;
-    cursor:pointer;
-    transition:0.3s;
-}
-
-button:hover{
-    transform:scale(1.03);
-}
-
-.payment{
-    display:none;
-    margin-top:20px;
-    background:rgba(0,0,0,0.6);
-    padding:15px;
-    border-radius:15px;
-}
-
-.note-box{
-    margin-top:12px;
-    padding:12px;
-    border-radius:12px;
-    background:rgba(0,0,0,0.6);
-    box-shadow:0 0 15px rgba(255,255,255,0.1);
-}
-
-.note-item{
-    font-size:13px;
-    padding:6px;
-    margin:4px 0;
-    border-radius:8px;
-    background:rgba(255,255,255,0.05);
-    text-align:center;
-    color:#facc15;
-}
-
-.emoji span{
-    position:fixed;
-    bottom:-50px;
-    font-size:22px;
-    opacity:0.7;
-    animation:naik 12s linear infinite;
-    filter:drop-shadow(0 0 10px #fff);
-}
-
-.emoji span:nth-child(1){left:10%;}
-.emoji span:nth-child(2){left:25%;}
-.emoji span:nth-child(3){left:45%;}
-.emoji span:nth-child(4){left:65%;}
-.emoji span:nth-child(5){left:80%;}
-.emoji span:nth-child(6){left:90%;}
-
-@keyframes naik{
-    0%{
-        transform:translateY(0) rotate(0);
-        opacity:0;
-    }
-
-    20%{
-        opacity:0.8;
-    }
-
-    100%{
-        transform:translateY(-120vh) rotate(360deg);
-        opacity:0;
-    }
-}
-
-</style>
-</head>
-
-<body>
-
-<canvas id="bgCanvas"></canvas>
-
-<div class="header">🚀 TOKO ROBUX 🚀</div>
-
-<div class="container">
-
-<div class="input-box">
-<input type="text" id="userid" placeholder="Masukkan User ID Roblox">
-<input type="text" id="nohp" placeholder="Masukkan Nomor WhatsApp (08xxx)">
-</div>
-
-<h3>Pilih Paket</h3>
-
-<div class="grid">
-
-<div class="card" onclick="pilih(this,'100 Robux',12000)">
-◘ 100<br>Rp12K
-</div>
-
-<div class="card" onclick="pilih(this,'300 Robux',36000)">
-◘ 300<br>Rp36K
-</div>
-
-<div class="card" onclick="pilih(this,'500 Robux',60000)">
-◘ 500<br>Rp60K
-</div>
-
-<div class="card" onclick="pilih(this,'1000 Robux',120000)">
-◘ 1000<br>Rp120K
-</div>
-
-<div class="card" onclick="pilih(this,'1500 Robux',180000)">
-◘ 1500<br>Rp180K
-</div>
-
-</div>
-
-<button onclick="lanjut()">Lanjut Pembayaran</button>
-
-<div class="payment" id="payBox">
-
-<h3>Pilih Pembayaran</h3>
-
-<select id="metode" onchange="showPayment()">
-<option value="">-- Pilih --</option>
-<option value="QRIS">QRIS</option>
-<option value="DANA">DANA</option>
-<option value="OVO">OVO</option>
-</select>
-
-<!-- QRIS -->
-
-<div id="qrisBox" style="
-display:none;
-margin-top:20px;
-text-align:center;
-">
-
-<img src="https://i.imgur.com/cDaQCNP.jpeg"
-style="
-width:260px;
-border-radius:18px;
-box-shadow:0 0 25px #22c55e;
-">
-
-<p style="
-margin-top:12px;
-color:#22c55e;
-font-weight:600;
-">
-✅ Scan QRIS untuk pembayaran
-</p>
-
-<p style="
-font-size:13px;
-opacity:0.8;
-line-height:1.6;
-">
-Setelah pembayaran berhasil,
-klik tombol konfirmasi di bawah ini
-</p>
-
-<button onclick="konfirmasiQRIS()" style="
-background:linear-gradient(135deg,#22c55e,#16a34a);
-">
-✔ Saya Sudah Bayar
-</button>
-
-</div>
-
-<!-- E-WALLET -->
-
-<div id="ewalletBox" style="
-display:none;
-margin-top:20px;
-">
-
-<div style="
-background:rgba(255,255,255,0.05);
-padding:15px;
-border-radius:14px;
-text-align:center;
-">
-
-<h3>📱 Pembayaran E-Wallet</h3>
-
-<p style="
-font-size:14px;
-opacity:0.8;
-line-height:1.6;
-">
-Untuk pembayaran DANA / OVO,
-silakan lanjut chat admin terlebih dahulu
-</p>
-
-<button onclick="kirim()" style="
-background:linear-gradient(135deg,#3b82f6,#2563eb);
-">
-💬 Chat Admin Sekarang
-</button>
-
-</div>
-
-</div>
-
-<!-- NOTES -->
-
-<div class="note-box">
-<div class="note-item">⚡ Proses cepat (1–5 menit)</div>
-<div class="note-item">💎 Robux instan langsung masuk 😊</div>
-<div class="note-item">🔒 Aman & terpercaya</div>
-<div class="note-item">📩 Wajib kirim bukti pembayaran</div>
-</div>
-
-</div>
-
-</div>
-
-<div class="emoji">
-<span>💎</span>
-<span>🔥</span>
-<span>🚀</span>
-<span>✨</span>
-<span>🎮</span>
-<span>💰</span>
-</div>
-
-<script>
+const db = getFirestore(app);
 
 const WEBHOOK_URL = "https://discord.com/api/webhooks/1501612323117338797/cqKIFk3cH2EJizaOqBk_FCqVKUhGXvS3o34YMKhpASmWRie3IyIgXnRifA-8U8pELCHh";
 
@@ -340,11 +48,14 @@ function pilih(el,nama,h){
     harga = h;
 }
 
+window.pilih = pilih;
+
 function lanjut(){
 
     let user = document.getElementById("userid").value;
 
     if(!user || !paket){
+
         alert("Isi data dulu!");
         return;
     }
@@ -352,26 +63,56 @@ function lanjut(){
     document.getElementById("payBox").style.display = "block";
 }
 
+window.lanjut = lanjut;
+
 function showPayment(){
 
     let metode = document.getElementById("metode").value;
 
     document.getElementById("qrisBox").style.display = "none";
+
     document.getElementById("ewalletBox").style.display = "none";
 
     if(metode === "QRIS"){
+
         document.getElementById("qrisBox").style.display = "block";
     }
 
     if(metode === "DANA" || metode === "OVO"){
+
         document.getElementById("ewalletBox").style.display = "block";
     }
+}
+
+window.showPayment = showPayment;
+
+async function simpanOrder(user,nohp,paket,harga,metode){
+
+    await addDoc(collection(db,"orders"),{
+
+        user:user,
+
+        nohp:nohp,
+
+        paket:paket,
+
+        harga:harga,
+
+        metode:metode,
+
+        status:"Menunggu Proses",
+
+        createdAt:serverTimestamp()
+
+    });
 }
 
 function kirimDiscord(user,nohp,paket,harga,metode){
 
     fetch(WEBHOOK_URL,{
+
         method:"POST",
+
         headers:{
             "Content-Type":"application/json"
         },
@@ -443,10 +184,12 @@ function kirimDiscord(user,nohp,paket,harga,metode){
     });
 }
 
-function kirim(){
+async function kirim(){
 
     let metode = document.getElementById("metode").value;
+
     let user = document.getElementById("userid").value;
+
     let nohp = document.getElementById("nohp").value;
 
     if(!metode || !nohp){
@@ -454,6 +197,8 @@ function kirim(){
         alert("Lengkapi data!");
         return;
     }
+
+    await simpanOrder(user,nohp,paket,harga,metode);
 
     kirimDiscord(user,nohp,paket,harga,metode);
 
@@ -470,10 +215,15 @@ Metode: ${metode}`;
     );
 }
 
-function konfirmasiQRIS(){
+window.kirim = kirim;
+
+async function konfirmasiQRIS(){
 
     let user = document.getElementById("userid").value;
+
     let nohp = document.getElementById("nohp").value;
+
+    await simpanOrder(user,nohp,paket,harga,"QRIS");
 
     kirimDiscord(user,nohp,paket,harga,"QRIS");
 
@@ -491,12 +241,16 @@ Mohon segera diproses 🙏`;
     );
 }
 
+window.konfirmasiQRIS = konfirmasiQRIS;
+
 /* PARTICLE BACKGROUND */
 
 const canvas = document.getElementById("bgCanvas");
+
 const ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
+
 canvas.height = window.innerHeight;
 
 let particles = [];
@@ -506,10 +260,12 @@ for(let i=0;i<80;i++){
     particles.push({
 
         x:Math.random()*canvas.width,
-        y:Math.random()*canvas.height,
-        size:Math.random()*2,
-        speed:Math.random()*0.5
 
+        y:Math.random()*canvas.height,
+
+        size:Math.random()*2,
+
+        speed:Math.random()*0.5
     });
 }
 
@@ -524,6 +280,7 @@ function animate(){
         if(p.y < 0){
 
             p.y = canvas.height;
+
             p.x = Math.random()*canvas.width;
         }
 
@@ -538,8 +295,8 @@ function animate(){
         );
 
         ctx.fillStyle = "rgba(255,255,255,0.7)";
-        ctx.fill();
 
+        ctx.fill();
     });
 
     requestAnimationFrame(animate);
@@ -550,11 +307,23 @@ animate();
 window.addEventListener("resize",()=>{
 
     canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
 
+    canvas.height = window.innerHeight;
+});
+
+/* REALTIME ORDER */
+
+onSnapshot(collection(db,"orders"),(snapshot)=>{
+
+    console.log("Realtime order aktif");
+
+    snapshot.docChanges().forEach((change)=>{
+
+        if(change.type === "added"){
+
+            console.log("Order baru:",change.doc.data());
+        }
+    });
 });
 
 </script>
-
-</body>
-</html>
