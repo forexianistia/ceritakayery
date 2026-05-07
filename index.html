@@ -11,6 +11,8 @@ import {
 }
 from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
+window.addEventListener("DOMContentLoaded",()=>{
+
 /* FIREBASE CONFIG */
 
 const firebaseConfig = {
@@ -271,6 +273,8 @@ window.konfirmasiQRIS = konfirmasiQRIS;
 
 const canvas = document.getElementById("bgCanvas");
 
+if(canvas){
+
 const ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
@@ -331,6 +335,8 @@ window.addEventListener("resize",()=>{
     canvas.height = window.innerHeight;
 });
 
+}
+
 /* REALTIME */
 
 try{
@@ -353,4 +359,5 @@ try{
     console.log("Realtime Error:",error);
 }
 
+});
 </script>
