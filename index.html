@@ -384,30 +384,57 @@ function kirimDiscord(user,nohp,paket,harga,metode){
 
                 title:"💎 TOKO ROBUX",
 
-                color:16711680,
+                description:"🛒 Pesanan baru berhasil masuk",
+
+                color:5763719,
+
+                thumbnail:{
+                    url:"https://i.imgur.com/cDaQCNP.jpeg"
+                },
 
                 fields:[
+
                     {
-                        name:"User ID",
-                        value:user
+                        name:"📌 Status",
+                        value:"🟡 Menunggu Proses",
+                        inline:false
                     },
+
                     {
-                        name:"No HP",
-                        value:nohp
+                        name:"👤 User ID",
+                        value:user,
+                        inline:true
                     },
+
                     {
-                        name:"Paket",
-                        value:paket
+                        name:"📱 No HP",
+                        value:nohp,
+                        inline:true
                     },
+
                     {
-                        name:"Harga",
-                        value:"Rp"+harga
+                        name:"🎮 Paket",
+                        value:paket,
+                        inline:true
                     },
+
                     {
-                        name:"Metode",
-                        value:metode
+                        name:"💰 Harga",
+                        value:"Rp"+harga,
+                        inline:true
+                    },
+
+                    {
+                        name:"💳 Metode",
+                        value:metode,
+                        inline:true
                     }
+
                 ],
+
+                footer:{
+                    text:"TOKO ROBUX PRO • AUTO ORDER"
+                },
 
                 timestamp:new Date()
 
