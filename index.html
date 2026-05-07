@@ -4,12 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TOKO ROBUX PRO</title>
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TOKO ROBUX PRO</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
@@ -47,7 +41,6 @@ body{
     background:linear-gradient(90deg,#ff4d4d,#facc15,#22c55e);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
-    text-shadow:0 0 25px rgba(255,0,0,0.7);
 }
 
 .container{
@@ -72,7 +65,6 @@ input,select{
     background:#111;
     color:white;
     margin-top:10px;
-    box-sizing:border-box;
 }
 
 .grid{
@@ -97,7 +89,6 @@ input,select{
 
 .card.active{
     border:2px solid #22c55e;
-    box-shadow:0 0 20px #22c55e;
 }
 
 button{
@@ -110,11 +101,6 @@ button{
     color:white;
     font-weight:600;
     cursor:pointer;
-    transition:0.3s;
-}
-
-button:hover{
-    transform:scale(1.03);
 }
 
 .payment{
@@ -130,7 +116,6 @@ button:hover{
     padding:12px;
     border-radius:12px;
     background:rgba(0,0,0,0.6);
-    box-shadow:0 0 15px rgba(255,255,255,0.1);
 }
 
 .note-item{
@@ -149,7 +134,6 @@ button:hover{
     font-size:22px;
     opacity:0.7;
     animation:naik 12s linear infinite;
-    filter:drop-shadow(0 0 10px #fff);
 }
 
 .emoji span:nth-child(1){left:10%;}
@@ -160,9 +144,9 @@ button:hover{
 .emoji span:nth-child(6){left:90%;}
 
 @keyframes naik{
-    0%{transform:translateY(0) rotate(0);opacity:0;}
-    20%{opacity:0.8;}
-    100%{transform:translateY(-120vh) rotate(360deg);opacity:0;}
+    0%{transform:translateY(0);opacity:0;}
+    20%{opacity:1;}
+    100%{transform:translateY(-120vh);opacity:0;}
 }
 
 </style>
@@ -178,19 +162,17 @@ button:hover{
 
 <div class="input-box">
 <input type="text" id="userid" placeholder="Masukkan Username Roblox">
-<input type="text" id="nohp" placeholder="Masukkan Nomor WhatsApp (08xxx)">
+<input type="text" id="nohp" placeholder="Masukkan Nomor WhatsApp">
 </div>
 
 <h3>Pilih Paket</h3>
 
 <div class="grid">
-
-<div class="card" onclick="pilih(this,'100 Robux',12000)">◘ 100<br>Rp12K</div>
-<div class="card" onclick="pilih(this,'300 Robux',36000)">◘ 300<br>Rp36K</div>
-<div class="card" onclick="pilih(this,'500 Robux',60000)">◘ 500<br>Rp60K</div>
-<div class="card" onclick="pilih(this,'1000 Robux',120000)">◘ 1000<br>Rp120K</div>
-<div class="card" onclick="pilih(this,'1500 Robux',180000)">◘ 1500<br>Rp180K</div>
-
+<div class="card" onclick="pilih(this,'100 Robux',12000)">100 - 12K</div>
+<div class="card" onclick="pilih(this,'300 Robux',36000)">300 - 36K</div>
+<div class="card" onclick="pilih(this,'500 Robux',60000)">500 - 60K</div>
+<div class="card" onclick="pilih(this,'1000 Robux',120000)">1000 - 120K</div>
+<div class="card" onclick="pilih(this,'1500 Robux',180000)">1500 - 180K</div>
 </div>
 
 <button onclick="lanjut()">Lanjut Pembayaran</button>
@@ -206,23 +188,21 @@ button:hover{
 <option value="OVO">OVO</option>
 </select>
 
-<div id="qrisBox" style="display:none;margin-top:20px;text-align:center;">
-<img src="https://i.imgur.com/cDaQCNP.jpeg" style="width:260px;border-radius:18px;box-shadow:0 0 25px #22c55e;">
-<p style="margin-top:12px;color:#22c55e;font-weight:600;">✅ Scan QRIS untuk pembayaran</p>
-<button onclick="konfirmasiQRIS()" style="background:linear-gradient(135deg,#22c55e,#16a34a);">✔ Saya Sudah Bayar</button>
+<div id="qrisBox" style="display:none;text-align:center;margin-top:15px;">
+<img src="https://i.imgur.com/cDaQCNP.jpeg" style="width:250px;border-radius:15px;">
+<button onclick="konfirmasiQRIS()">✔ Saya Sudah Bayar</button>
 </div>
 
-<div id="ewalletBox" style="display:none;margin-top:20px;">
-<button onclick="kirim()" style="background:linear-gradient(135deg,#3b82f6,#2563eb);">💬 Chat Admin</button>
+<div id="ewalletBox" style="display:none;margin-top:15px;">
+<button onclick="kirim()">💬 Chat Admin</button>
 </div>
 
 </div>
 
 <div class="note-box">
-<div class="note-item">⚡ Proses cepat (1–5 menit)</div>
-<div class="note-item">💎 Robux instan langsung masuk</div>
-<div class="note-item">🔒 Aman & terpercaya</div>
-<div class="note-item">📩 Wajib kirim bukti pembayaran</div>
+<div class="note-item">⚡ Proses cepat</div>
+<div class="note-item">💎 Robux instant</div>
+<div class="note-item">🔒 Aman</div>
 </div>
 
 </div>
@@ -237,448 +217,101 @@ const WEBHOOK_URL = "ISI_WEBHOOK_KAMU";
 
 let paket="", harga=0;
 
-function pilih(el,nama,h){
-document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
-el.classList.add("active");
-paket=nama;
-harga=h;
-}
-
-function lanjut(){
-let user=document.getElementById("userid").value;
-if(!user||!paket){alert("Isi data dulu!");return;}
-document.getElementById("payBox").style.display="block";
-}
-
-function showPayment(){
-let m=document.getElementById("metode").value;
-document.getElementById("qrisBox").style.display="none";
-document.getElementById("ewalletBox").style.display="none";
-if(m==="QRIS")document.getElementById("qrisBox").style.display="block";
-if(m==="DANA"||m==="OVO")document.getElementById("ewalletBox").style.display="block";
-}
-
-/* 🔥 AMBIL AVATAR ROBLOX */
+/* AMBIL AVATAR ROBLOX */
 async function getAvatar(username){
     try{
-        const u = await fetch("https://users.roblox.com/v1/usernames/users",{
+        const r = await fetch("https://users.roblox.com/v1/usernames/users",{
             method:"POST",
             headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({usernames:[username],excludeBannedUsers:true})
+            body:JSON.stringify({usernames:[username]})
         });
-        const data = await u.json();
-        const id = data.data[0].id;
 
-        return `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${id}&size=420x420&format=Png&isCircular=false`;
-    }catch(e){
-        return "https://i.imgur.com/cDaQCNP.jpeg";
-    }
-}
+        const d = await r.json();
+        const id = d.data?.[0]?.id;
 
-async function kirimDiscord(user,nohp,paket,harga,metode){
+        if(!id) return "https://tr.rbxcdn.com/default-avatar.png";
 
-    let avatar = await getAvatar(user);
-
-    fetch(WEBHOOK_URL,{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({
-            content:"🔥 ORDER MASUK!",
-            embeds:[{
-                title:"💎 TOKO ROBUX",
-                color:5763719,
-                thumbnail:{url:avatar},
-                fields:[
-                    {name:"User",value:user},
-                    {name:"No HP",value:nohp},
-                    {name:"Paket",value:paket},
-                    {name:"Harga",value:"Rp"+harga},
-                    {name:"Metode",value:metode}
-                ]
-            }]
-        })
-    });
-}
-
-function kirim(){
-let user=document.getElementById("userid").value;
-let nohp=document.getElementById("nohp").value;
-let m=document.getElementById("metode").value;
-kirimDiscord(user,nohp,paket,harga,m);
-window.open("https://wa.me/6287733313467");
-}
-
-function konfirmasiQRIS(){
-kirim();
-}
-
-/* animasi tetap */
-const canvas=document.getElementById("bgCanvas");
-const ctx=canvas.getContext("2d");
-canvas.width=innerWidth;
-canvas.height=innerHeight;
-
-let p=[];
-for(let i=0;i<80;i++){
-p.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,s:Math.random()*2});
-}
-
-function anim(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-p.forEach(e=>{
-e.y-=0.5;
-if(e.y<0)e.y=canvas.height;
-ctx.fillStyle="white";
-ctx.fillRect(e.x,e.y,e.s,e.s);
-});
-requestAnimationFrame(anim);
-}
-anim();
-
-</script>
-
-</body>
-</html>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-<style>
-
-body{
-    margin:0;
-    font-family:'Poppins',sans-serif;
-    color:white;
-    background:linear-gradient(270deg,#0f0c29,#302b63,#24243e,#0f0c29);
-    background-size:600% 600%;
-    animation:bgGerak 15s ease infinite;
-}
-
-@keyframes bgGerak{
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
-}
-
-#bgCanvas{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    z-index:-1;
-}
-
-.header{
-    text-align:center;
-    padding:25px;
-    font-size:28px;
-    font-weight:700;
-    background:linear-gradient(90deg,#ff4d4d,#facc15,#22c55e);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    text-shadow:0 0 25px rgba(255,0,0,0.7);
-}
-
-.container{
-    max-width:900px;
-    margin:auto;
-    padding:20px;
-}
-
-.input-box{
-    background:rgba(0,0,0,0.6);
-    padding:20px;
-    border-radius:15px;
-    margin-bottom:20px;
-    backdrop-filter:blur(10px);
-}
-
-input,select{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:10px;
-    background:#111;
-    color:white;
-    margin-top:10px;
-    box-sizing:border-box;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-    gap:15px;
-}
-
-.card{
-    background:rgba(0,0,0,0.6);
-    padding:15px;
-    border-radius:15px;
-    text-align:center;
-    cursor:pointer;
-    transition:0.3s;
-}
-
-.card:hover{
-    transform:scale(1.05);
-    box-shadow:0 0 15px red;
-}
-
-.card.active{
-    border:2px solid #22c55e;
-    box-shadow:0 0 20px #22c55e;
-}
-
-button{
-    width:100%;
-    padding:12px;
-    margin-top:15px;
-    border:none;
-    border-radius:10px;
-    background:linear-gradient(135deg,#ff4d4d,#ff0000);
-    color:white;
-    font-weight:600;
-    cursor:pointer;
-    transition:0.3s;
-}
-
-button:hover{
-    transform:scale(1.03);
-}
-
-.payment{
-    display:none;
-    margin-top:20px;
-    background:rgba(0,0,0,0.6);
-    padding:15px;
-    border-radius:15px;
-}
-
-.note-box{
-    margin-top:12px;
-    padding:12px;
-    border-radius:12px;
-    background:rgba(0,0,0,0.6);
-    box-shadow:0 0 15px rgba(255,255,255,0.1);
-}
-
-.note-item{
-    font-size:13px;
-    padding:6px;
-    margin:4px 0;
-    border-radius:8px;
-    background:rgba(255,255,255,0.05);
-    text-align:center;
-    color:#facc15;
-}
-
-.emoji span{
-    position:fixed;
-    bottom:-50px;
-    font-size:22px;
-    opacity:0.7;
-    animation:naik 12s linear infinite;
-    filter:drop-shadow(0 0 10px #fff);
-}
-
-.emoji span:nth-child(1){left:10%;}
-.emoji span:nth-child(2){left:25%;}
-.emoji span:nth-child(3){left:45%;}
-.emoji span:nth-child(4){left:65%;}
-.emoji span:nth-child(5){left:80%;}
-.emoji span:nth-child(6){left:90%;}
-
-@keyframes naik{
-    0%{transform:translateY(0) rotate(0);opacity:0;}
-    20%{opacity:0.8;}
-    100%{transform:translateY(-120vh) rotate(360deg);opacity:0;}
-}
-
-</style>
-</head>
-
-<body>
-
-<canvas id="bgCanvas"></canvas>
-
-<div class="header">🚀 TOKO ROBUX 🚀</div>
-
-<div class="container">
-
-<div class="input-box">
-<input type="text" id="userid" placeholder="Masukkan User ID Roblox">
-<input type="text" id="nohp" placeholder="Masukkan Nomor WhatsApp (08xxx)">
-</div>
-
-<h3>Pilih Paket</h3>
-
-<div class="grid">
-
-<div class="card" onclick="pilih(this,'100 Robux',12000)">
-◘ 100<br>Rp12K
-</div>
-
-<div class="card" onclick="pilih(this,'300 Robux',36000)">
-◘ 300<br>Rp36K
-</div>
-
-<div class="card" onclick="pilih(this,'500 Robux',60000)">
-◘ 500<br>Rp60K
-</div>
-
-<div class="card" onclick="pilih(this,'1000 Robux',120000)">
-◘ 1000<br>Rp120K
-</div>
-
-<div class="card" onclick="pilih(this,'1500 Robux',180000)">
-◘ 1500<br>Rp180K
-</div>
-
-</div>
-
-<button onclick="lanjut()">Lanjut Pembayaran</button>
-
-<div class="payment" id="payBox">
-
-<h3>Pilih Pembayaran</h3>
-
-<select id="metode" onchange="showPayment()">
-<option value="">-- Pilih --</option>
-<option value="QRIS">QRIS</option>
-<option value="DANA">DANA</option>
-<option value="OVO">OVO</option>
-</select>
-
-<div id="qrisBox" style="display:none;margin-top:20px;text-align:center;">
-<img src="https://i.imgur.com/cDaQCNP.jpeg" style="width:260px;border-radius:18px;box-shadow:0 0 25px #22c55e;">
-<p style="margin-top:12px;color:#22c55e;font-weight:600;">✅ Scan QRIS untuk pembayaran</p>
-<button onclick="konfirmasiQRIS()" style="background:linear-gradient(135deg,#22c55e,#16a34a);">✔ Saya Sudah Bayar</button>
-</div>
-
-<div id="ewalletBox" style="display:none;margin-top:20px;">
-<div style="background:rgba(255,255,255,0.05);padding:15px;border-radius:14px;text-align:center;">
-<h3>📱 E-Wallet</h3>
-<p>Silakan lanjut chat admin</p>
-<button onclick="kirim()" style="background:linear-gradient(135deg,#3b82f6,#2563eb);">💬 Chat Admin</button>
-</div>
-</div>
-
-<div class="note-box">
-<div class="note-item">⚡ Proses cepat (1–5 menit)</div>
-<div class="note-item">💎 Robux instan</div>
-<div class="note-item">🔒 Aman</div>
-<div class="note-item">📩 Wajib bukti pembayaran</div>
-</div>
-
-</div>
-
-</div>
-
-<div class="emoji">
-<span>💎</span><span>🔥</span><span>🚀</span><span>✨</span><span>🎮</span><span>💰</span>
-</div>
-
-<script>
-
-const WEBHOOK_URL = "https://discord.com/api/webhooks/1501612323117338797/cqKIFk3cH2EJizaOqBk_FCqVKUhGXvS3o34YMKhpASmWRie3IyIgXnRifA-8U8pELCHh";
-
-let paket="", harga=0;
-
-/* AVATAR ROBLOX */
-async function getAvatar(username){
-    try{
-        let r = await fetch(`https://api.roblox.com/users/get-by-username?username=${username}`);
-        let d = await r.json();
-        if(!d.Id) return "https://tr.rbxcdn.com/default-avatar.png";
-        return `https://www.roblox.com/headshot-thumbnail/image?userId=${d.Id}&width=420&height=420&format=png`;
+        return `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${id}&size=420x420&format=Png`;
     }catch{
         return "https://tr.rbxcdn.com/default-avatar.png";
     }
 }
 
 function pilih(el,nama,h){
-    document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
-    el.classList.add("active");
-    paket=nama; harga=h;
+document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
+el.classList.add("active");
+paket=nama;harga=h;
 }
 
 function lanjut(){
-    let user=document.getElementById("userid").value;
-    if(!user||!paket) return alert("Isi data!");
-    document.getElementById("payBox").style.display="block";
+if(!paket)return alert("Pilih paket!");
+payBox.style.display="block";
 }
 
 function showPayment(){
-    let m=document.getElementById("metode").value;
-    qrisBox.style.display=m==="QRIS"?"block":"none";
-    ewalletBox.style.display=(m==="DANA"||m==="OVO")?"block":"none";
+let m=metode.value;
+qrisBox.style.display=m==="QRIS"?"block":"none";
+ewalletBox.style.display=(m==="DANA"||m==="OVO")?"block":"none";
 }
 
-/* DISCORD + AVATAR */
-async function kirimDiscord(user,nohp,paket,harga,metode){
+/* DISCORD */
+async function kirimDiscord(user,nohp,metode){
 
-    let avatar = await getAvatar(user);
+let avatar = await getAvatar(user);
 
-    fetch(WEBHOOK_URL,{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({
-            content:"🔥 ORDER MASUK!",
-            embeds:[{
-                title:"💎 TOKO ROBUX",
-                color:5763719,
-                thumbnail:{url:avatar},
-                image:{url:avatar},
-                fields:[
-                    {name:"User",value:user},
-                    {name:"No HP",value:nohp},
-                    {name:"Paket",value:paket},
-                    {name:"Harga",value:"Rp"+harga},
-                    {name:"Metode",value:metode}
-                ],
-                footer:{text:"TOKO ROBUX PRO"},
-                timestamp:new Date()
-            }]
-        })
-    });
+fetch(WEBHOOK_URL,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+content:"🔥 ORDER MASUK!",
+embeds:[{
+title:"TOKO ROBUX",
+thumbnail:{url:avatar},
+image:{url:avatar},
+fields:[
+{name:"User",value:user},
+{name:"No HP",value:nohp},
+{name:"Paket",value:paket},
+{name:"Harga",value:"Rp"+harga},
+{name:"Metode",value:metode}
+]
+}]
+})
+});
+
 }
 
 async function kirim(){
-    let m=document.getElementById("metode").value;
-    let u=document.getElementById("userid").value;
-    let n=document.getElementById("nohp").value;
-    if(!m||!n) return alert("Lengkapi data!");
-    await kirimDiscord(u,n,paket,harga,m);
-    window.open("https://wa.me/6287733313467");
+let u=userid.value,n=nohp.value,m=metode.value;
+await kirimDiscord(u,n,m);
+window.open("https://wa.me/6287733313467");
 }
 
 async function konfirmasiQRIS(){
-    let u=document.getElementById("userid").value;
-    let n=document.getElementById("nohp").value;
-    await kirimDiscord(u,n,paket,harga,"QRIS");
-    window.open("https://wa.me/6287733313467");
+await kirim();
 }
 
-/* BACKGROUND */
-const canvas=document.getElementById("bgCanvas");
-const ctx=canvas.getContext("2d");
-canvas.width=innerWidth;canvas.height=innerHeight;
+/* ANIMASI */
+const c=bgCanvas.getContext("2d");
+bgCanvas.width=innerWidth;
+bgCanvas.height=innerHeight;
 
-let particles=[];
-for(let i=0;i<80;i++)particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,size:Math.random()*2,speed:Math.random()*0.5});
+let p=[];
+for(let i=0;i<80;i++){
+p.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,s:Math.random()*2});
+}
 
-function animate(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-particles.forEach(p=>{
-p.y-=p.speed;
-if(p.y<0){p.y=canvas.height;p.x=Math.random()*canvas.width;}
-ctx.beginPath();
-ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
-ctx.fillStyle="white";
-ctx.fill();
+function anim(){
+c.clearRect(0,0,innerWidth,innerHeight);
+p.forEach(e=>{
+e.y-=0.5;
+if(e.y<0)e.y=innerHeight;
+c.fillStyle="white";
+c.fillRect(e.x,e.y,e.s,e.s);
 });
-requestAnimationFrame(animate);
+requestAnimationFrame(anim);
 }
-animate();
+anim();
 
 </script>
 
