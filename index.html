@@ -1,560 +1,135 @@
 <!DOCTYPE html>
+
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TOKO ROBUX PRO</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<title>KayCerita</title>
 
 <style>
 
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
 body{
-    margin:0;
-    font-family:'Poppins',sans-serif;
-    color:white;
-    background:linear-gradient(270deg,#0f0c29,#302b63,#24243e,#0f0c29);
-    background-size:600% 600%;
-    animation:bgGerak 15s ease infinite;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+
+background:
+linear-gradient(
+135deg,
+rgba(255,255,255,1),
+rgba(200,200,200,0.75),
+rgba(0,0,0,0.35)
+);
 }
 
-@keyframes bgGerak{
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
+body::before{
+content:"";
+position:absolute;
+inset:0;
+backdrop-filter:blur(8px);
 }
 
-#bgCanvas{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    z-index:-1;
+.hero{
+position:relative;
+z-index:2;
+text-align:center;
+padding:40px;
 }
 
-.header{
-    text-align:center;
-    padding:25px;
-    font-size:28px;
-    font-weight:700;
-    background:linear-gradient(90deg,#ff4d4d,#facc15,#22c55e);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    text-shadow:0 0 25px rgba(255,0,0,0.7);
+.hero h1{
+font-size:90px;
+font-weight:900;
+color:white;
+
+text-shadow:
+0 0 10px rgba(0,0,0,.2),
+0 0 30px rgba(0,0,0,.3),
+0 0 50px rgba(0,0,0,.3);
 }
 
-.container{
-    max-width:900px;
-    margin:auto;
-    padding:20px;
+.hero p{
+margin-top:15px;
+font-size:20px;
+color:white;
+opacity:.9;
 }
 
-.input-box{
-    background:rgba(0,0,0,0.6);
-    padding:20px;
-    border-radius:15px;
-    margin-bottom:20px;
-    backdrop-filter:blur(10px);
+.btn{
+display:inline-block;
+margin-top:30px;
+padding:15px 40px;
+
+background:white;
+color:#111;
+
+text-decoration:none;
+font-weight:700;
+
+border-radius:50px;
+
+transition:.3s;
 }
 
-input,select{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:10px;
-    background:#111;
-    color:white;
-    margin-top:10px;
-    box-sizing:border-box;
+.btn:hover{
+transform:translateY(-4px);
+box-shadow:0 10px 25px rgba(0,0,0,.15);
 }
 
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-    gap:15px;
+.footer{
+position:absolute;
+bottom:20px;
+left:0;
+right:0;
+text-align:center;
+color:white;
+opacity:.6;
+font-size:14px;
 }
 
-.card{
-    background:rgba(0,0,0,0.6);
-    padding:15px;
-    border-radius:15px;
-    text-align:center;
-    cursor:pointer;
-    transition:0.3s;
+@media(max-width:768px){
+
+.hero h1{
+font-size:60px;
 }
 
-.card:hover{
-    transform:scale(1.05);
-    box-shadow:0 0 15px red;
+.hero p{
+font-size:16px;
 }
 
-.card.active{
-    border:2px solid #22c55e;
-    box-shadow:0 0 20px #22c55e;
-}
-
-button{
-    width:100%;
-    padding:12px;
-    margin-top:15px;
-    border:none;
-    border-radius:10px;
-    background:linear-gradient(135deg,#ff4d4d,#ff0000);
-    color:white;
-    font-weight:600;
-    cursor:pointer;
-    transition:0.3s;
-}
-
-button:hover{
-    transform:scale(1.03);
-}
-
-.payment{
-    display:none;
-    margin-top:20px;
-    background:rgba(0,0,0,0.6);
-    padding:15px;
-    border-radius:15px;
-}
-
-.note-box{
-    margin-top:12px;
-    padding:12px;
-    border-radius:12px;
-    background:rgba(0,0,0,0.6);
-    box-shadow:0 0 15px rgba(255,255,255,0.1);
-}
-
-.note-item{
-    font-size:13px;
-    padding:6px;
-    margin:4px 0;
-    border-radius:8px;
-    background:rgba(255,255,255,0.05);
-    text-align:center;
-    color:#facc15;
-}
-
-.emoji span{
-    position:fixed;
-    bottom:-50px;
-    font-size:22px;
-    opacity:0.7;
-    animation:naik 12s linear infinite;
-    filter:drop-shadow(0 0 10px #fff);
-}
-
-.emoji span:nth-child(1){left:10%;}
-.emoji span:nth-child(2){left:25%;}
-.emoji span:nth-child(3){left:45%;}
-.emoji span:nth-child(4){left:65%;}
-.emoji span:nth-child(5){left:80%;}
-.emoji span:nth-child(6){left:90%;}
-
-@keyframes naik{
-    0%{
-        transform:translateY(0) rotate(0);
-        opacity:0;
-    }
-
-    20%{
-        opacity:0.8;
-    }
-
-    100%{
-        transform:translateY(-120vh) rotate(360deg);
-        opacity:0;
-    }
 }
 
 </style>
-</head>
 
+</head>
 <body>
 
-<canvas id="bgCanvas"></canvas>
+<div class="hero">
 
-<div class="header">🚀 TOKO ROBUX 🚀</div>
+<h1>KayCerita</h1>
 
-<div class="container">
-
-<div class="input-box">
-<input type="text" id="userid" placeholder="Masukkan User ID Roblox">
-<input type="text" id="nohp" placeholder="Masukkan Nomor WhatsApp (08xxx)">
-</div>
-
-<h3>Pilih Paket</h3>
-
-<div class="grid">
-
-<div class="card" onclick="pilih(this,'100 Robux',12000)">
-◘ 100<br>Rp12K
-</div>
-
-<div class="card" onclick="pilih(this,'300 Robux',36000)">
-◘ 300<br>Rp36K
-</div>
-
-<div class="card" onclick="pilih(this,'500 Robux',60000)">
-◘ 500<br>Rp60K
-</div>
-
-<div class="card" onclick="pilih(this,'1000 Robux',120000)">
-◘ 1000<br>Rp120K
-</div>
-
-<div class="card" onclick="pilih(this,'1500 Robux',180000)">
-◘ 1500<br>Rp180K
-</div>
-
-</div>
-
-<button onclick="lanjut()">Lanjut Pembayaran</button>
-
-<div class="payment" id="payBox">
-
-<h3>Pilih Pembayaran</h3>
-
-<select id="metode" onchange="showPayment()">
-<option value="">-- Pilih --</option>
-<option value="QRIS">QRIS</option>
-<option value="DANA">DANA</option>
-<option value="OVO">OVO</option>
-</select>
-
-<!-- QRIS -->
-
-<div id="qrisBox" style="
-display:none;
-margin-top:20px;
-text-align:center;
-">
-
-<img src="https://i.imgur.com/cDaQCNP.jpeg"
-style="
-width:260px;
-border-radius:18px;
-box-shadow:0 0 25px #22c55e;
-">
-
-<p style="
-margin-top:12px;
-color:#22c55e;
-font-weight:600;
-">
-✅ Scan QRIS untuk pembayaran
+<p>
+Tempat menyimpan dunia, karakter,
+dan semua kisahmu.
 </p>
 
-<p style="
-font-size:13px;
-opacity:0.8;
-line-height:1.6;
-">
-Setelah pembayaran berhasil,
-klik tombol konfirmasi di bawah ini
-</p>
-
-<button onclick="konfirmasiQRIS()" style="
-background:linear-gradient(135deg,#22c55e,#16a34a);
-">
-✔ Saya Sudah Bayar
-</button>
+<a href="lobby.html" class="btn">
+Masuk ke Lobby
+</a>
 
 </div>
 
-<!-- E-WALLET -->
-
-<div id="ewalletBox" style="
-display:none;
-margin-top:20px;
-">
-
-<div style="
-background:rgba(255,255,255,0.05);
-padding:15px;
-border-radius:14px;
-text-align:center;
-">
-
-<h3>📱 Pembayaran E-Wallet</h3>
-
-<p style="
-font-size:14px;
-opacity:0.8;
-line-height:1.6;
-">
-Untuk pembayaran DANA / OVO,
-silakan lanjut chat admin terlebih dahulu
-</p>
-
-<button onclick="kirim()" style="
-background:linear-gradient(135deg,#3b82f6,#2563eb);
-">
-💬 Chat Admin Sekarang
-</button>
-
+<div class="footer">
+© KayCerita
 </div>
-
-</div>
-
-<!-- NOTES -->
-
-<div class="note-box">
-<div class="note-item">⚡ Proses cepat (1–5 menit)</div>
-<div class="note-item">💎 Robux instan langsung masuk 😊</div>
-<div class="note-item">🔒 Aman & terpercaya</div>
-<div class="note-item">📩 Wajib kirim bukti pembayaran</div>
-</div>
-
-</div>
-
-</div>
-
-<div class="emoji">
-<span>💎</span>
-<span>🔥</span>
-<span>🚀</span>
-<span>✨</span>
-<span>🎮</span>
-<span>💰</span>
-</div>
-
-<script>
-
-const WEBHOOK_URL = "https://discord.com/api/webhooks/1501612323117338797/cqKIFk3cH2EJizaOqBk_FCqVKUhGXvS3o34YMKhpASmWRie3IyIgXnRifA-8U8pELCHh";
-
-let paket = "";
-let harga = 0;
-
-function pilih(el,nama,h){
-
-    document.querySelectorAll(".card").forEach(c=>{
-        c.classList.remove("active");
-    });
-
-    el.classList.add("active");
-
-    paket = nama;
-    harga = h;
-}
-
-function lanjut(){
-
-    let user = document.getElementById("userid").value;
-
-    if(!user || !paket){
-        alert("Isi data dulu!");
-        return;
-    }
-
-    document.getElementById("payBox").style.display = "block";
-}
-
-function showPayment(){
-
-    let metode = document.getElementById("metode").value;
-
-    document.getElementById("qrisBox").style.display = "none";
-    document.getElementById("ewalletBox").style.display = "none";
-
-    if(metode === "QRIS"){
-        document.getElementById("qrisBox").style.display = "block";
-    }
-
-    if(metode === "DANA" || metode === "OVO"){
-        document.getElementById("ewalletBox").style.display = "block";
-    }
-}
-
-function kirimDiscord(user,nohp,paket,harga,metode){
-
-    fetch(WEBHOOK_URL,{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json"
-        },
-
-        body:JSON.stringify({
-
-            content:"🔥 ORDER MASUK!",
-
-            embeds:[{
-
-                title:"💎 TOKO ROBUX",
-
-                description:"🛒 Pesanan baru berhasil masuk",
-
-                color:5763719,
-
-                thumbnail:{
-                    url:"https://i.imgur.com/cDaQCNP.jpeg"
-                },
-
-                fields:[
-
-                    {
-                        name:"📌 Status",
-                        value:"👇",
-                        inline:false
-                    },
-
-                    {
-                        name:"👤 User ID",
-                        value:user,
-                        inline:true
-                    },
-
-                    {
-                        name:"📱 No HP",
-                        value:nohp,
-                        inline:true
-                    },
-
-                    {
-                        name:"🎮 Paket",
-                        value:paket,
-                        inline:true
-                    },
-
-                    {
-                        name:"💰 Harga",
-                        value:"Rp"+harga,
-                        inline:true
-                    },
-
-                    {
-                        name:"💳 Metode",
-                        value:metode,
-                        inline:true
-                    }
-
-                ],
-
-                footer:{
-                    text:"TOKO ROBUX PRO • AUTO ORDER"
-                },
-
-                timestamp:new Date()
-
-            }]
-        })
-    });
-}
-
-function kirim(){
-
-    let metode = document.getElementById("metode").value;
-    let user = document.getElementById("userid").value;
-    let nohp = document.getElementById("nohp").value;
-
-    if(!metode || !nohp){
-
-        alert("Lengkapi data!");
-        return;
-    }
-
-    kirimDiscord(user,nohp,paket,harga,metode);
-
-    let pesan = `Halo saya ingin beli robux
-
-User ID: ${user}
-No HP: ${nohp}
-Paket: ${paket}
-Harga: Rp${harga}
-Metode: ${metode}`;
-
-    window.open(
-        "https://wa.me/6287733313467?text="+encodeURIComponent(pesan)
-    );
-}
-
-function konfirmasiQRIS(){
-
-    let user = document.getElementById("userid").value;
-    let nohp = document.getElementById("nohp").value;
-
-    kirimDiscord(user,nohp,paket,harga,"QRIS");
-
-    let pesan = `Halo admin saya sudah bayar QRIS
-
-User ID: ${user}
-No HP: ${nohp}
-Paket: ${paket}
-Harga: Rp${harga}
-
-Mohon segera diproses 🙏`;
-
-    window.open(
-        "https://wa.me/6287733313467?text="+encodeURIComponent(pesan)
-    );
-}
-
-/* PARTICLE BACKGROUND */
-
-const canvas = document.getElementById("bgCanvas");
-const ctx = canvas.getContext("2d");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let particles = [];
-
-for(let i=0;i<80;i++){
-
-    particles.push({
-
-        x:Math.random()*canvas.width,
-        y:Math.random()*canvas.height,
-        size:Math.random()*2,
-        speed:Math.random()*0.5
-
-    });
-}
-
-function animate(){
-
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    particles.forEach(p=>{
-
-        p.y -= p.speed;
-
-        if(p.y < 0){
-
-            p.y = canvas.height;
-            p.x = Math.random()*canvas.width;
-        }
-
-        ctx.beginPath();
-
-        ctx.arc(
-            p.x,
-            p.y,
-            p.size,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fillStyle = "rgba(255,255,255,0.7)";
-        ctx.fill();
-
-    });
-
-    requestAnimationFrame(animate);
-}
-
-animate();
-
-window.addEventListener("resize",()=>{
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-});
-
-</script>
 
 </body>
 </html>
